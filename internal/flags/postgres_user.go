@@ -3,19 +3,19 @@ package flags
 import "github.com/urfave/cli/v2"
 
 const (
-	postgresUrlName = "postgres_url"
-	postgresUrlShort = "purl"
-	postgresUrlEnvVarName = "POSTGRES_URL"
-	postgresUrlRequired = true
+	postgresUserName = "postgres_user"
+	postgresUserShort = "puser"
+	postgresUserEnvVarName = "POSTGRES_USER"
+	postgresUserRequired = true
 )
 
-func PostgresUrl(value *string) cli.Flag {
+func PostgresUser(value *string) cli.Flag {
 	return &cli.StringFlag{
-		Name:        postgresUrlName,
-		Aliases:     []string{postgresUrlShort},
-		Usage:       "--"+postgresUrlName+" url",
-		EnvVars:     []string{postgresUrlEnvVarName},
-		Required:    postgresUrlRequired,
+		Name:        postgresUserName,
+		Aliases:     []string{postgresUserShort},
+		Usage:       "--"+postgresUserName+" user",
+		EnvVars:     []string{postgresUserEnvVarName},
+		Required:    postgresUserRequired,
 		Destination: value,
 	}
 }

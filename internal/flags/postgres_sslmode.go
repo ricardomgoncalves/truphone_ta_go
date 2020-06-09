@@ -3,19 +3,19 @@ package flags
 import "github.com/urfave/cli/v2"
 
 const (
-	postgresDbNameName = "postgres_dbname"
-	postgresDbNameShort = "pdb"
-	postgresDbNameEnvVarName = "POSTGRES_DBNAME"
-	postgresDbNameRequired = true
+	postgresSslModeName = "postgres_sslmode"
+	postgresSslModeShort = "pssl"
+	postgresSslModeEnvVarName = "POSTGRES_SSLMODE"
+	postgresSslModeRequired = true
 )
 
-func PostgresDbName(value *string) cli.Flag {
+func PostgresSslMode(value *string) cli.Flag {
 	return &cli.StringFlag{
-		Name:        postgresDbNameName,
-		Aliases:     []string{postgresDbNameShort},
-		Usage:       "--"+postgresDbNameName+" name",
-		EnvVars:     []string{postgresDbNameEnvVarName},
-		Required:    postgresDbNameRequired,
+		Name:        postgresSslModeName,
+		Aliases:     []string{postgresSslModeShort},
+		Usage:       "--"+postgresSslModeName+" mode",
+		EnvVars:     []string{postgresSslModeEnvVarName},
+		Required:    postgresSslModeRequired,
 		Destination: value,
 	}
 }

@@ -2,34 +2,14 @@ package family
 
 import (
 	"encoding/json"
-	"errors"
-	"github.com/ricardomgoncalves/truphone_ta_go/internal/countrycode"
+	"log"
 	"time"
-)
-
-var (
-	ErrInvalidCountryCode = errors.New("invalid country code")
 )
 
 type Family struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	CountryCode string `json:"country_code"`
-}
-
-func (a *Family) UnmarshalJSON(b []byte) error {
-	if !countrycode.IsValid(a.CountryCode) {
-		return ErrInvalidCountryCode
-	}
-
-	if err := json.Unmarshal(b, a); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (a Family) MarshalJSON() ([]byte, error) {
-	return json.Marshal(a)
 }
 
 type Member struct {
@@ -70,7 +50,8 @@ func (a Member) toRaw() memberRaw {
 	}
 }
 
-func (a memberRaw) Parse() (Member, error) {
+func (a memberRaw) parse() (Member, error) {
+	log.Println(a)
 	birthday, err := time.Parse(time.RFC3339, a.Birthday)
 	if err != nil {
 		return Member{}, err
@@ -95,15 +76,11 @@ func (a *Member) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	member, err := raw.Parse()
+	member, err := raw.parse()
 	if err != nil {
 		return err
 	}
 
 	*a = member
 	return nil
-}
-
-func (a Member) MarshalJSON() ([]byte, error) {
-	return json.Marshal(a.toRaw())
 }

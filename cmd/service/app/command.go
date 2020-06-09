@@ -18,7 +18,7 @@ func New() error {
 
 	app.Action = func(context *cli.Context) error {
 		service := NewServiceApp()
-		return service.Run(opts)
+		return service.Run(*opts)
 	}
 
 	return app.Run(os.Args)
