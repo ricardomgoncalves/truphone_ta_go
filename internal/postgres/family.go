@@ -25,14 +25,12 @@ func (*familyRow) TableName() string {
 	return "families"
 }
 
-func (m *familyRow) BeforeSave(scope *gorm.Scope) error {
-	if m.CreatedAt.IsZero() {
-		m.CreatedAt = time.Now()
-	}
+func (m *familyRow) BeforeSave(_ *gorm.Scope) error {
 	m.UpdatedAt = time.Now()
-	return nil
-}
 
-func (m *familyRow) AfterFind(scope *gorm.Scope) error {
+	if m.CreatedAt.IsZero() {
+		m.CreatedAt = m.UpdatedAt
+	}
+
 	return nil
 }
