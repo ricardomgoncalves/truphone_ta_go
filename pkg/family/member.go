@@ -13,9 +13,9 @@ type Member struct {
 	FirstName  string    `json:"first_name"`
 	MiddleName string    `json:"middle_name"`
 	LastName   string    `json:"last_name"`
-	FatherId   uuid.UUID `json:"father_id"`
-	MotherId   uuid.UUID `json:"mother_id"`
-	SpouseId   uuid.UUID `json:"spouse_id"`
+	FatherId   *uuid.UUID `json:"father_id"`
+	MotherId   *uuid.UUID `json:"mother_id"`
+	SpouseId   *uuid.UUID `json:"spouse_id"`
 	Birthday   time.Time `json:"birthday"`
 }
 
@@ -29,9 +29,9 @@ type memberRaw struct {
 	FirstName  string    `json:"first_name"`
 	MiddleName string    `json:"middle_name"`
 	LastName   string    `json:"last_name"`
-	FatherId   uuid.UUID `json:"father_id"`
-	MotherId   uuid.UUID `json:"mother_id"`
-	SpouseId   uuid.UUID `json:"spouse_id"`
+	FatherId   *uuid.UUID `json:"father_id"`
+	MotherId   *uuid.UUID `json:"mother_id"`
+	SpouseId   *uuid.UUID `json:"spouse_id"`
 	Birthday   string    `json:"birthday"`
 }
 
