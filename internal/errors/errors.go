@@ -3,26 +3,17 @@ package errors
 import (
 	"errors"
 	"fmt"
-	"reflect"
 	"strconv"
 )
 
 // New is a drop in replacement for the standard library errors module that records
 // the location that the error is created.
-//
-// For example:
-//    return errors.New("validation failed")
-//
 func New(message string) error {
 	return errors.New(message)
 }
 
 // Errorf creates a new annotated error and records the location that the
 // error is created.  This should be a drop in replacement for fmt.Errorf.
-//
-// For example:
-//    return errors.Errorf("validation failed: %s", message)
-//
 func Errorf(format string, args ...interface{}) error {
 	return errors.New(fmt.Sprintf(format, args...))
 }
@@ -67,28 +58,6 @@ func IsTemporary(err error) bool {
 	return false
 }
 
-// IsType checks if an error or any of its underlying errors have the same type as sample.
-func IsType(err error, sample interface{}) error {
-	var match string
-	if sample != nil {
-		match = reflect.TypeOf(sample).String()
-	}
-
-	var last error
-	Iterate(err, func(err error) bool {
-		var node string
-		if err != nil {
-			node = reflect.TypeOf(err).String()
-		}
-		if match == node {
-			last = err
-			return false
-		}
-		return true
-	})
-	return last
-}
-
 // Is checks if an error or any of its underlying errors and the instance passed as arguments are the same.
 func Is(err error, instance error) bool {
 	return Iterate(err, func(err error) bool {
@@ -111,12 +80,6 @@ type annotated struct {
 }
 
 // Annotate is used to add extra context to an existing error.
-//
-// For example:
-//   if err := SomeFunc(); err != nil {
-//       return errors.Annotate(err, "failed to frombulate")
-//   }
-//
 func Annotate(other error, message string) error {
 	if other == nil {
 		return nil
@@ -128,12 +91,6 @@ func Annotate(other error, message string) error {
 }
 
 // Annotatef is used to add extra context to an existing error.
-//
-// For example:
-//   if err := SomeFunc(); err != nil {
-//       return errors.Annotatef(err, "failed to frombulate the %s", arg)
-//   }
-//
 func Annotatef(other error, format string, args ...interface{}) error {
 	if other == nil {
 		return nil
@@ -161,13 +118,6 @@ type wrapped struct {
 }
 
 // Wrap changes the Cause of the error.
-//
-// For example:
-//   if err := SomeFunc(); err != nil {
-//       newErr := errors.New("example")
-//       return errors.Wrap(err, newErr)
-//   }
-//
 func Wrap(inner, outer error) error {
 	return wrapped{
 		error: inner,

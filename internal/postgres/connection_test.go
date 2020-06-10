@@ -1,4 +1,4 @@
-package repo
+package postgres
 
 import (
 	"github.com/stretchr/testify/assert"

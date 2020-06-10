@@ -1,12 +1,16 @@
 package repo
 
-import "github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
+import (
+	"context"
+	"github.com/google/uuid"
+	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
+)
 
 type FamilyRepo interface {
-	GetFamilyById(id int) (family.Family, error)
+	GetFamilyById(ctx context.Context, id uuid.UUID) (*family.Family, error)
 }
 
 type MemberRepo interface {
-	GetMemberById(id int) (family.Member, error)
-	GetMembersByFamilyId(familyId int) ([]family.Member, error)
+	GetMemberById(ctx context.Context, id uuid.UUID) (*family.Member, error)
+	GetMembersByFamilyId(ctx context.Context, familyId uuid.UUID, offset *int, limit *int) ([]family.Member, error)
 }
