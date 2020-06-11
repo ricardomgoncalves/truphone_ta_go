@@ -2,18 +2,16 @@ package family
 
 import (
 	"encoding/json"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewMemberWithId(t *testing.T) {
 	t.Run("should return member with id", func(t *testing.T) {
-		id, err := uuid.NewUUID()
-		require.Nil(t, err)
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
 		member := NewMemberWithId(id)
 		assert.Equal(t, id, member.Id)
 	})
@@ -22,7 +20,7 @@ func TestNewMemberWithId(t *testing.T) {
 func TestMember_UnmarshalJSON(t *testing.T) {
 	t.Run("should return valid member", func(t *testing.T) {
 		date, _ := time.Parse(time.RFC3339, "2012-02-03T00:04:05Z")
-		id, _ := uuid.Parse("146adc77-912c-4bd2-a70e-4b136e6b0791")
+		id := "146adc77-912c-4bd2-a70e-4b136e6b0791"
 
 		sourceMembers := []struct {
 			input  []byte
@@ -87,7 +85,7 @@ func TestMember_UnmarshalJSON(t *testing.T) {
 
 func TestMemberRaw_Parse(t *testing.T) {
 	t.Run("should return a valid member", func(t *testing.T) {
-		id, _ := uuid.Parse("146adc77-912c-4bd2-a70e-4b136e6b0791")
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
 		rawMember := memberRaw{
 			Id:         id,
 			FamilyId:   id,
@@ -116,8 +114,7 @@ func TestMemberRaw_Parse(t *testing.T) {
 	})
 
 	t.Run("should return an error", func(t *testing.T) {
-		id, _ := uuid.Parse("146adc77-912c-4bd2-a70e-4b136e6b0791")
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
 		rawMember := memberRaw{
 			Id:         id,
 			FamilyId:   id,
@@ -140,9 +137,7 @@ func TestMember_ToRaw(t *testing.T) {
 		date, err := time.Parse(time.RFC3339, "2012-02-03T00:04:05Z")
 		require.Nil(t, err, "should be able to parse date")
 
-		id, err := uuid.Parse("146adc77-912c-4bd2-a70e-4b136e6b0791")
-		require.Nil(t, err, "should be able to parse uuid")
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
 		member := Member{
 			Id:         id,
 			FamilyId:   id,

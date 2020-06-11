@@ -3,11 +3,10 @@ package postgres
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/lib/pq"
-	"github.com/ricardomgoncalves/truphone_ta_go/internal/errors"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/repo"
+	"github.com/ricardomgoncalves/truphone_ta_go/pkg/errors"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
 )
 
@@ -38,26 +37,26 @@ func (p Repo) CreateFamily(ctx context.Context, fam family.Family) error {
 	return nil
 }
 
-func (p Repo) GetFamilyById(ctx context.Context, id uuid.UUID) (*family.Family, error) {
+func (p Repo) GetFamilyById(ctx context.Context, id string) (*family.Family, error) {
 	db := p.db.Set("ctx", ctx)
 
 	fml := family.NewFamilyWithId(id)
 	row := newFamilyRow(&fml)
 
-	if err := db.Where("id = ?", id.String()).First(row).Error; err != nil {
+	if err := db.Where("id = ?", id).First(row).Error; err != nil {
 		return nil, p.checkFamilyError(err)
 	}
 
 	return row.Value(), nil
 }
 
-func (p Repo) UpdateFamilyById(ctx context.Context, id uuid.UUID, fam family.Family) error {
+func (p Repo) UpdateFamilyById(ctx context.Context, id string, fam family.Family) error {
 	famRow := newFamilyRow(&fam)
 
 	db := p.db.
 		Set("ctx", ctx).
 		Model(famRow).
-		Where("id = ?", id.String()).
+		Where("id = ?", id).
 		Update(famRow)
 
 	if db.Error != nil {
@@ -71,13 +70,13 @@ func (p Repo) UpdateFamilyById(ctx context.Context, id uuid.UUID, fam family.Fam
 	return nil
 }
 
-func (p Repo) DeleteFamilyById(ctx context.Context, id uuid.UUID) error {
+func (p Repo) DeleteFamilyById(ctx context.Context, id string) error {
 	fml := family.NewFamilyWithId(id)
 	row := newFamilyRow(&fml)
 
 	db := p.db.
 		Set("ctx", ctx).
-		Delete(row, "id = '"+id.String()+"'")
+		Delete(row, "id = '"+id+"'")
 
 	if db.Error != nil {
 		return p.checkFamilyError(db.Error)
@@ -101,20 +100,20 @@ func (p Repo) CreateMember(ctx context.Context, member family.Member) error {
 	return nil
 }
 
-func (p Repo) GetMemberById(ctx context.Context, id uuid.UUID) (*family.Member, error) {
+func (p Repo) GetMemberById(ctx context.Context, id string) (*family.Member, error) {
 	db := p.db.Set("ctx", ctx)
 
 	member := family.NewMemberWithId(id)
 	row := newMemberRow(&member)
 
-	if err := db.Where("id = ?", id.String()).First(row).Error; err != nil {
+	if err := db.Where("id = ?", id).First(row).Error; err != nil {
 		return nil, p.checkFamilyError(err)
 	}
 
 	return row.Value(), nil
 }
 
-func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId uuid.UUID, offset *int, limit *int) ([]family.Member, error) {
+func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId string, offset *int, limit *int) ([]family.Member, error) {
 	db := p.db.Set("ctx", ctx)
 
 	if limit != nil && *limit != 0 {
@@ -125,7 +124,7 @@ func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId uuid.UUID, offs
 		db = db.Offset(*offset)
 	}
 
-	db = db.Where("family_id = ?", familyId.String())
+	db = db.Where("family_id = ?", familyId)
 
 	rows := make([]*memberRow, 0, 200)
 	if err := db.Find(&rows).Error; err != nil {
@@ -144,13 +143,13 @@ func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId uuid.UUID, offs
 	return results, nil
 }
 
-func (p Repo) UpdateMemberById(ctx context.Context, id uuid.UUID, member family.Member) error {
+func (p Repo) UpdateMemberById(ctx context.Context, id string, member family.Member) error {
 	memberRow := newMemberRow(&member)
 
 	db := p.db.
 		Set("ctx", ctx).
 		Model(memberRow).
-		Where("id = ?", id.String()).
+		Where("id = ?", id).
 		Update(memberRow)
 
 	if db.Error != nil {
@@ -164,13 +163,13 @@ func (p Repo) UpdateMemberById(ctx context.Context, id uuid.UUID, member family.
 	return nil
 }
 
-func (p Repo) DeleteMemberById(ctx context.Context, id uuid.UUID) error {
+func (p Repo) DeleteMemberById(ctx context.Context, id string) error {
 	member := family.NewMemberWithId(id)
 	row := newMemberRow(&member)
 
 	db := p.db.
 		Set("ctx", ctx).
-		Delete(row, "id = '"+id.String()+"'")
+		Delete(row, "id = '"+id+"'")
 
 	if db.Error != nil {
 		return p.checkMemberError(db.Error)

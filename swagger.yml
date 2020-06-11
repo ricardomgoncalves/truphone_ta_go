@@ -1,0 +1,222 @@
+basePath: /truphone
+consumes:
+- application/json
+definitions:
+  CreateFamilyRequest:
+    description: Response by CreateFamily Service.
+    properties:
+      family:
+        $ref: '#/definitions/Family'
+    required:
+    - family
+    title: CreateFamilyRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  CreateFamilyResponse:
+    description: Response by CreateFamily Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the message for the request
+        type: string
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: CreateFamilyResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  DeleteFamilyRequest:
+    description: Response by DeleteFamily Service.
+    properties:
+      id:
+        description: the family for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+    required:
+    - id
+    title: DeleteFamilyRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  DeleteFamilyResponse:
+    description: Response by DeleteFamily Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+    required:
+    - id
+    - code
+    - message
+    title: DeleteFamilyResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  Family:
+    description: A family can have a name and a country.
+    properties:
+      country_code:
+        description: the country code for this family
+        maxLength: 2
+        minLength: 2
+        type: string
+        x-go-name: CountryCode
+      id:
+        description: the id for this family
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      name:
+        description: the name for this family
+        maxLength: 30
+        minLength: 3
+        type: string
+        x-go-name: Name
+    required:
+    - id
+    - name
+    - country_code
+    title: Family
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/pkg/family
+  Member:
+    description: A member can have a father, mother and spouse.
+    properties:
+      birthday:
+        description: the birthday for this member
+        example: "2012-02-03T00:04:05Z"
+        format: date-time
+        type: string
+        x-go-name: Birthday
+      family_id:
+        description: the family id for this member
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: FamilyId
+      father_id:
+        description: the father id for this member
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: FatherId
+      first_name:
+        description: the first name for this member
+        minLength: 3
+        type: string
+        x-go-name: FirstName
+      id:
+        description: the id for this member
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      last_name:
+        description: the last name for this member
+        minLength: 3
+        type: string
+        x-go-name: LastName
+      middle_name:
+        description: the middle name for this member
+        minLength: 3
+        type: string
+        x-go-name: MiddleName
+      mother_id:
+        description: the mother id for this member
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: MotherId
+      spouse_id:
+        description: the spouse id for this member
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: SpouseId
+    required:
+    - id
+    - family_id
+    - first_name
+    - middle_name
+    - last_name
+    - birthday
+    title: Member
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/pkg/family
+host: 127.0.0.1:8080
+info:
+  contact:
+    email: ricardo.341928@hotmail.com
+    name: Ricardo Goncalves
+    url: http://localhost
+  description: |-
+    the purpose of this application is to provide a management support
+    of families.
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  title: Family API.
+  version: 0.0.1
+paths:
+  /families:
+    post:
+      operationId: createFamily
+      parameters:
+      - description: family request
+        in: body
+        name: family
+        required: true
+        schema:
+          $ref: '#/definitions/CreateFamilyRequest'
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/CreateFamilyResponse'
+      summary: Creates a new Family.
+  /families/{id}:
+    delete:
+      operationId: createFamily
+      parameters:
+      - in: path
+        name: id
+        required: true
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/DeleteFamilyResponse'
+      summary: Creates a new Family.
+produces:
+- application/json
+schemes:
+- http
+- https
+swagger: "2.0"

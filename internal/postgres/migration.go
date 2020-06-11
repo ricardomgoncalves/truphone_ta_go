@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
 	"time"
@@ -12,10 +11,10 @@ func CreateTables(db *gorm.DB) error {
 }
 
 func Populate(db *gorm.DB) error {
-	familyUuid, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038")
-	if err != nil {
-		return nil
-	}
+	familyUuid := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
+	fatherUuid := "11810f35-309a-4836-b7e9-1fee57bed924"
+	motherUuid := "5d32fc95-ce3e-4b18-8680-fce1e6f8e3ea"
+	childUuid := "8d9d3e48-4b34-40de-b986-1042b1a42f86"
 
 	familyRow := newFamilyRow(&family.Family{
 		Id:          familyUuid,
@@ -24,21 +23,6 @@ func Populate(db *gorm.DB) error {
 	})
 	if err := db.Create(familyRow).Error; err != nil {
 		return err
-	}
-
-	fatherUuid, err := uuid.Parse("11810f35-309a-4836-b7e9-1fee57bed924")
-	if err != nil {
-		return nil
-	}
-
-	motherUuid, err := uuid.Parse("5d32fc95-ce3e-4b18-8680-fce1e6f8e3ea")
-	if err != nil {
-		return nil
-	}
-
-	childUuid, err := uuid.Parse("8d9d3e48-4b34-40de-b986-1042b1a42f86")
-	if err != nil {
-		return nil
 	}
 
 	fatherRow := newMemberRow(&family.Member{

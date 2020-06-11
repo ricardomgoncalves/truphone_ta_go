@@ -3,7 +3,7 @@ package postgres
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/lib/pq"
-	"github.com/ricardomgoncalves/truphone_ta_go/internal/errors"
+	"github.com/ricardomgoncalves/truphone_ta_go/pkg/errors"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

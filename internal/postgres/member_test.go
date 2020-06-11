@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +11,7 @@ import (
 func TestNewMemberRow(t *testing.T) {
 	t.Run("should return a family row", func(t *testing.T) {
 		fam := &family.Member{
-			Id: uuid.New(),
+			Id: "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038",
 		}
 		famRow := newMemberRow(fam)
 		assert.Equal(t, fam, famRow.Value())

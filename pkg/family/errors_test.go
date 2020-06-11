@@ -7,13 +7,14 @@ import (
 )
 
 func TestConstants(t *testing.T) {
-	assert.Equal(t, "unknown error", ErrorFamilyUnknown.Error())
-	assert.Equal(t, "resource locked", ErrorFamilyLocked.Error())
-	assert.Equal(t, "not found", ErrorFamilyNotFound.Error())
-	assert.Equal(t, "already exists", ErrorFamilyAlreadyExists.Error())
+	assert.Equal(t, "500: unknown error", ErrorFamilyUnknown.Error())
+	assert.Equal(t, "500: resource locked", ErrorFamilyLocked.Error())
+	assert.Equal(t, "400: bad request", ErrorFamilyBadRequest.Error())
+	assert.Equal(t, "404: not found", ErrorFamilyNotFound.Error())
+	assert.Equal(t, "409: already exists", ErrorFamilyAlreadyExists.Error())
 
-	assert.Equal(t, "unknown error", ErrorMemberUnknown.Error())
-	assert.Equal(t, "resource locked", ErrorMemberLocked.Error())
-	assert.Equal(t, "not found", ErrorMemberNotFound.Error())
-	assert.Equal(t, "already exists", ErrorMemberAlreadyExists.Error())
+	assert.Equal(t, "500: unknown error", ErrorMemberUnknown.Error())
+	assert.Equal(t, "500: resource locked", ErrorMemberLocked.Error())
+	assert.Equal(t, "404: not found", ErrorMemberNotFound.Error())
+	assert.Equal(t, "409: already exists", ErrorMemberAlreadyExists.Error())
 }

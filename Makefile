@@ -15,3 +15,12 @@ build_migrate:
 
 migrate:
 	./build/migrate -purl //localhost:5432 -pssl disable -pdb postgres -puser postgres -ppw postgres
+
+docker_build:
+	docker build --tag truphone_go:lastest .
+
+vendor:
+	go mod download
+
+run:
+	go run cmd/service/main.go -purl //localhost:5432 -pssl disable -pdb postgres -puser postgres -ppw postgres
