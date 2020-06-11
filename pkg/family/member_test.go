@@ -36,9 +36,9 @@ func TestMember_UnmarshalJSON(t *testing.T) {
 					FirstName:  "ri",
 					MiddleName: "mi",
 					LastName:   "go",
-					FatherId:   id,
-					MotherId:   id,
-					SpouseId:   id,
+					FatherId:   &id,
+					MotherId:   &id,
+					SpouseId:   &id,
 					Birthday:   date,
 				},
 			},
@@ -94,9 +94,9 @@ func TestMemberRaw_Parse(t *testing.T) {
 			FirstName:  "Ricardo",
 			MiddleName: "Miguel",
 			LastName:   "Goncalves",
-			FatherId:   id,
-			MotherId:   id,
-			SpouseId:   id,
+			FatherId:   &id,
+			MotherId:   &id,
+			SpouseId:   &id,
 			Birthday:   "2012-02-03T00:04:05Z",
 		}
 
@@ -109,9 +109,9 @@ func TestMemberRaw_Parse(t *testing.T) {
 		assert.Equal(t, "Ricardo", member.FirstName, "FirstName must be equal")
 		assert.Equal(t, "Miguel", member.MiddleName, "MiddleName must be equal")
 		assert.Equal(t, "Goncalves", member.LastName, "LastName must be equal")
-		assert.Equal(t, id, member.FatherId, "FatherId must be equal")
-		assert.Equal(t, id, member.MotherId, "MotherId must be equal")
-		assert.Equal(t, id, member.SpouseId, "SpouseId must be equal")
+		assert.Equal(t, id, *member.FatherId, "FatherId must be equal")
+		assert.Equal(t, id, *member.MotherId, "MotherId must be equal")
+		assert.Equal(t, id, *member.SpouseId, "SpouseId must be equal")
 		assert.Equal(t, date, member.Birthday, "Birthday must be equal")
 	})
 
@@ -124,9 +124,9 @@ func TestMemberRaw_Parse(t *testing.T) {
 			FirstName:  "Ricardo",
 			MiddleName: "Miguel",
 			LastName:   "Goncalves",
-			FatherId:   id,
-			MotherId:   id,
-			SpouseId:   id,
+			FatherId:   &id,
+			MotherId:   &id,
+			SpouseId:   &id,
 			Birthday:   "2012-02-03T0",
 		}
 
@@ -149,9 +149,9 @@ func TestMember_ToRaw(t *testing.T) {
 			FirstName:  "Ricardo",
 			MiddleName: "Miguel",
 			LastName:   "Goncalves",
-			FatherId:   id,
-			MotherId:   id,
-			SpouseId:   id,
+			FatherId:   &id,
+			MotherId:   &id,
+			SpouseId:   &id,
 			Birthday:   date,
 		}
 
@@ -162,9 +162,9 @@ func TestMember_ToRaw(t *testing.T) {
 		assert.Equal(t, "Ricardo", rawMember.FirstName, "FirstName must be equal")
 		assert.Equal(t, "Miguel", rawMember.MiddleName, "MiddleName must be equal")
 		assert.Equal(t, "Goncalves", rawMember.LastName, "LastName must be equal")
-		assert.Equal(t, id, rawMember.FatherId, "FatherId must be equal")
-		assert.Equal(t, id, rawMember.MotherId, "MotherId must be equal")
-		assert.Equal(t, id, rawMember.SpouseId, "SpouseId must be equal")
+		assert.Equal(t, id, *rawMember.FatherId, "FatherId must be equal")
+		assert.Equal(t, id, *rawMember.MotherId, "MotherId must be equal")
+		assert.Equal(t, id, *rawMember.SpouseId, "SpouseId must be equal")
 		assert.Equal(t, "2012-02-03T00:04:05Z", rawMember.Birthday, "Birthday must be equal")
 	})
 }

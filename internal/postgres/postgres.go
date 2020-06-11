@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/lib/pq"
@@ -25,6 +26,18 @@ var (
 	_ repo.MemberRepo = (*Repo)(nil)
 )
 
+func (p Repo) CreateFamily(ctx context.Context, fam family.Family) error {
+	db := p.db.Set("ctx", ctx)
+
+	row := newFamilyRow(&fam)
+
+	if err := db.Create(row).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (p Repo) GetFamilyById(ctx context.Context, id uuid.UUID) (*family.Family, error) {
 	db := p.db.Set("ctx", ctx)
 
@@ -36,6 +49,56 @@ func (p Repo) GetFamilyById(ctx context.Context, id uuid.UUID) (*family.Family, 
 	}
 
 	return row.Value(), nil
+}
+
+func (p Repo) UpdateFamilyById(ctx context.Context, id uuid.UUID, fam family.Family) error {
+	famRow := newFamilyRow(&fam)
+
+	db := p.db.
+		Set("ctx", ctx).
+		Model(famRow).
+		Where("id = ?", id.String()).
+		Update(famRow)
+
+	if db.Error != nil {
+		return p.checkFamilyError(db.Error)
+	}
+
+	if db.RowsAffected == 0 {
+		return p.checkFamilyError(family.ErrorFamilyNotFound)
+	}
+
+	return nil
+}
+
+func (p Repo) DeleteFamilyById(ctx context.Context, id uuid.UUID) error {
+	fml := family.NewFamilyWithId(id)
+	row := newFamilyRow(&fml)
+
+	db := p.db.
+		Set("ctx", ctx).
+		Delete(row, "id = '"+id.String()+"'")
+
+	if db.Error != nil {
+		return p.checkFamilyError(db.Error)
+	}
+
+	if db.RowsAffected == 0 {
+		return p.checkFamilyError(family.ErrorFamilyNotFound)
+	}
+
+	return nil
+}
+
+func (p Repo) CreateMember(ctx context.Context, member family.Member) error {
+	db := p.db.Set("ctx", ctx)
+
+	row := newMemberRow(&member)
+	if err := db.Create(row).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (p Repo) GetMemberById(ctx context.Context, id uuid.UUID) (*family.Member, error) {
@@ -81,6 +144,45 @@ func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId uuid.UUID, offs
 	return results, nil
 }
 
+func (p Repo) UpdateMemberById(ctx context.Context, id uuid.UUID, member family.Member) error {
+	memberRow := newMemberRow(&member)
+
+	db := p.db.
+		Set("ctx", ctx).
+		Model(memberRow).
+		Where("id = ?", id.String()).
+		Update(memberRow)
+
+	if db.Error != nil {
+		return p.checkMemberError(db.Error)
+	}
+
+	if db.RowsAffected == 0 {
+		return p.checkMemberError(family.ErrorMemberNotFound)
+	}
+
+	return nil
+}
+
+func (p Repo) DeleteMemberById(ctx context.Context, id uuid.UUID) error {
+	member := family.NewMemberWithId(id)
+	row := newMemberRow(&member)
+
+	db := p.db.
+		Set("ctx", ctx).
+		Delete(row, "id = '"+id.String()+"'")
+
+	if db.Error != nil {
+		return p.checkMemberError(db.Error)
+	}
+
+	if db.RowsAffected == 0 {
+		return p.checkMemberError(family.ErrorMemberNotFound)
+	}
+
+	return nil
+}
+
 func (p *Repo) checkFamilyError(err error) error {
 	switch e2 := err.(type) {
 	case nil:
@@ -98,10 +200,14 @@ func (p *Repo) checkFamilyError(err error) error {
 		}
 		return errors.Wrap(err, family.ErrorFamilyUnknown)
 	default:
-		if err == gorm.ErrRecordNotFound {
+		switch err {
+		case family.ErrorFamilyNotFound:
+			return err
+		case gorm.ErrRecordNotFound:
 			return errors.Wrap(err, family.ErrorFamilyNotFound)
+		default:
+			return errors.Wrap(err, family.ErrorFamilyUnknown)
 		}
-		return errors.Wrap(err, family.ErrorFamilyUnknown)
 	}
 }
 
@@ -122,9 +228,13 @@ func (p *Repo) checkMemberError(err error) error {
 		}
 		return errors.Wrap(err, family.ErrorMemberUnknown)
 	default:
-		if err == gorm.ErrRecordNotFound {
+		switch err {
+		case family.ErrorMemberNotFound:
+			return err
+		case gorm.ErrRecordNotFound:
 			return errors.Wrap(err, family.ErrorMemberNotFound)
+		default:
+			return errors.Wrap(err, family.ErrorMemberUnknown)
 		}
-		return errors.Wrap(err, family.ErrorMemberUnknown)
 	}
 }

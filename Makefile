@@ -4,6 +4,12 @@ test:
 coverage: test
 	go tool cover -html=cp.out
 
+test_integration:
+	go test -coverprofile cpi.out -tags=test_all  ./...
+
+coverage_integration: test_integration
+	go tool cover -html=cpi.out
+
 build_migrate:
 	go build -o ./build/migrate cmd/migrate/main.go
 
