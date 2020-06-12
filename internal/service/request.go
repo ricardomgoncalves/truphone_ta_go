@@ -187,3 +187,24 @@ func (req *GetMemberRequest) GetId() string {
 
 	return req.Id
 }
+
+// DeleteMemberRequest
+//
+// Request by DeleteMember Service.
+//
+// swagger:model
+type DeleteMemberRequest struct {
+	// the family for the request
+	//
+	// required: true
+	// example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+	Id string `json:"id"`
+}
+
+func (req *DeleteMemberRequest) GetId() string {
+	if req == nil {
+		return ""
+	}
+
+	return req.Id
+}

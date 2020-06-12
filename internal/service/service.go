@@ -23,8 +23,8 @@ type Service interface {
 	CreateMember(ctx context.Context, req *CreateMemberRequest) (*CreateMemberResponse, error)
 	GetMember(ctx context.Context, req *GetMemberRequest) (*GetMemberResponse, error)
 	/*ListMembers (ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
-	UpdateMember (ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)
-	DeleteMember (ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error)*/
+	UpdateMember (ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)*/
+	DeleteMember(ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error)
 }
 
 type FamilyService struct {
@@ -249,5 +249,24 @@ func (service FamilyService) GetMember(ctx context.Context, req *GetMemberReques
 		Code:    http.StatusOK,
 		Message: http.StatusText(http.StatusOK),
 		Result:  *member,
+	}, nil
+}
+
+func (service FamilyService) DeleteMember(ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error) {
+	requestId, _ := requestid.GetRequestId(ctx)
+
+	id := req.GetId()
+	if id == "" {
+		return nil, errors.Annotate(family.ErrorMemberBadRequest, "member id should be provided")
+	}
+
+	if err := service.memberRepo.DeleteMemberById(ctx, id); err != nil {
+		return nil, err
+	}
+
+	return &DeleteMemberResponse{
+		Id:      requestId,
+		Code:    http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
 	}, nil
 }

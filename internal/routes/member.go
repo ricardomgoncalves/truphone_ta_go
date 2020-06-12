@@ -49,7 +49,23 @@ func MemberRouter(router *mux.Router, service service.Service) {
 	//       "$ref": "#/definitions/GetMemberResponse"
 	subRouter.HandleFunc("/{id}", GetMemberHandler(service)).Methods("GET")
 	//subRouter.HandleFunc("/{id}", ProductsHandler).Methods("PUT")
-	//subRouter.HandleFunc("/{id}", ProductsHandler).Methods("DELETE")
+	// swagger:operation DELETE /members/{id} deleteMember
+	//
+	// Delete a Member.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: id
+	//   in: path
+	//   description: member id
+	//   required: true
+	// responses:
+	//   default:
+	//     schema:
+	//       "$ref": "#/definitions/DeleteMemberResponse"
+	subRouter.HandleFunc("/{id}", DeleteMemberHandler(service)).Methods("DELETE")
 }
 
 func CreateMemberHandler(svc service.Service) http.HandlerFunc {
@@ -79,6 +95,22 @@ func GetMemberHandler(svc service.Service) http.HandlerFunc {
 
 		id, _ := vars["id"]
 		resp, err := svc.GetMember(ctx, &service.GetMemberRequest{Id: id})
+		if err != nil {
+			WriteError(ctx, w, err)
+			return
+		}
+
+		Write(ctx, w, resp.Code, resp)
+	}
+}
+
+func DeleteMemberHandler(svc service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		ctx := r.Context()
+
+		id, _ := vars["id"]
+		resp, err := svc.DeleteMember(ctx, &service.DeleteMemberRequest{Id: id})
 		if err != nil {
 			WriteError(ctx, w, err)
 			return

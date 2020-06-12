@@ -137,3 +137,18 @@ func (mr *MockServiceMockRecorder) GetMember(ctx, req interface{}) *gomock.Call 
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMember", reflect.TypeOf((*MockService)(nil).GetMember), ctx, req)
 }
+
+// DeleteMember mocks base method
+func (m *MockService) DeleteMember(ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteMember", ctx, req)
+	ret0, _ := ret[0].(*DeleteMemberResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteMember indicates an expected call of DeleteMember
+func (mr *MockServiceMockRecorder) DeleteMember(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMember", reflect.TypeOf((*MockService)(nil).DeleteMember), ctx, req)
+}

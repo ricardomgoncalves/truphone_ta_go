@@ -133,3 +133,14 @@ func TestGetMemberRequest_GetId(t *testing.T) {
 		assert.Equal(t, "id", req.GetId())
 	})
 }
+
+func TestDeleteMemberRequest_GetId(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *DeleteFamilyRequest
+		assert.Equal(t, "", req.GetId())
+	})
+	t.Run("should return id", func(t *testing.T) {
+		req := &DeleteFamilyRequest{Id: "id"}
+		assert.Equal(t, "id", req.GetId())
+	})
+}

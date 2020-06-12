@@ -765,3 +765,43 @@ func TestFamilyService_GetMember(t *testing.T) {
 		require.Equal(t, "request_id", resp.Id)
 	})
 }
+
+func TestFamilyService_DeleteMember(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return error member id should be provided", func(t *testing.T) {
+		resp, err := service.DeleteMember(ctx, &DeleteMemberRequest{Id: ""})
+		require.Equal(t, errors.Annotate(family.ErrorMemberBadRequest, "member id should be provided"), err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return error on repository error", func(t *testing.T) {
+		errToReturn := errors.New("some random error")
+		memRepo.EXPECT().
+			DeleteMemberById(gomock.Eq(ctx), gomock.Eq("id")).
+			Times(1).
+			Return(errToReturn)
+
+		resp, err := service.DeleteMember(ctx, &DeleteMemberRequest{Id: "id"})
+		require.Equal(t, errToReturn, err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return member", func(t *testing.T) {
+		memRepo.EXPECT().
+			DeleteMemberById(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil)
+
+		resp, err := service.DeleteMember(ctx, &DeleteMemberRequest{Id: "id"})
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		require.Equal(t, "request_id", resp.Id)
+	})
+}
