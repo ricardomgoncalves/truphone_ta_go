@@ -48,7 +48,29 @@ func MemberRouter(router *mux.Router, service service.Service) {
 	//     schema:
 	//       "$ref": "#/definitions/GetMemberResponse"
 	subRouter.HandleFunc("/{id}", GetMemberHandler(service)).Methods("GET")
-	//subRouter.HandleFunc("/{id}", ProductsHandler).Methods("PUT")
+	// swagger:operation PUT /members/{id} updateMember
+	//
+	// Update a Member.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: id
+	//   in: path
+	//   description: member id
+	//   required: true
+	// - name: member
+	//   in: body
+	//   description: member request
+	//   schema:
+	//     "$ref": "#/definitions/UpdateMemberRequest"
+	//   required: true
+	// responses:
+	//   default:
+	//     schema:
+	//       "$ref": "#/definitions/UpdateMemberResponse"
+	subRouter.HandleFunc("/{id}", UpdateMemberHandler(service)).Methods("PUT")
 	// swagger:operation DELETE /members/{id} deleteMember
 	//
 	// Delete a Member.
@@ -95,6 +117,30 @@ func GetMemberHandler(svc service.Service) http.HandlerFunc {
 
 		id, _ := vars["id"]
 		resp, err := svc.GetMember(ctx, &service.GetMemberRequest{Id: id})
+		if err != nil {
+			WriteError(ctx, w, err)
+			return
+		}
+
+		Write(ctx, w, resp.Code, resp)
+	}
+}
+
+func UpdateMemberHandler(svc service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		ctx := r.Context()
+
+		req := &service.UpdateMemberRequest{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			WriteError(ctx, w, errors.Wrap(family.ErrorMemberBadRequest, err))
+			return
+		}
+
+		id, _ := vars["id"]
+		req.Id = id
+
+		resp, err := svc.UpdateMember(ctx, req)
 		if err != nil {
 			WriteError(ctx, w, err)
 			return

@@ -82,50 +82,87 @@ type memberRaw struct {
 	Birthday   string  `json:"birthday"`
 }
 
-func (a Member) toRaw() memberRaw {
+func (m Member) toRaw() memberRaw {
 	return memberRaw{
-		Id:         a.Id,
-		FamilyId:   a.FamilyId,
-		FirstName:  a.FirstName,
-		MiddleName: a.MiddleName,
-		LastName:   a.LastName,
-		FatherId:   a.FatherId,
-		MotherId:   a.MotherId,
-		SpouseId:   a.SpouseId,
-		Birthday:   a.Birthday.Format(time.RFC3339),
+		Id:         m.Id,
+		FamilyId:   m.FamilyId,
+		FirstName:  m.FirstName,
+		MiddleName: m.MiddleName,
+		LastName:   m.LastName,
+		FatherId:   m.FatherId,
+		MotherId:   m.MotherId,
+		SpouseId:   m.SpouseId,
+		Birthday:   m.Birthday.Format(time.RFC3339),
 	}
 }
 
-func (a memberRaw) parse() (Member, error) {
-	birthday, err := time.Parse(time.RFC3339, a.Birthday)
-	if err != nil {
-		return Member{}, err
+func (m memberRaw) parse() Member {
+	member := Member{
+		Id:         m.Id,
+		FamilyId:   m.FamilyId,
+		FirstName:  m.FirstName,
+		MiddleName: m.MiddleName,
+		LastName:   m.LastName,
+		FatherId:   m.FatherId,
+		MotherId:   m.MotherId,
+		SpouseId:   m.SpouseId,
+		Birthday:   time.Time{},
 	}
 
-	return Member{
-		Id:         a.Id,
-		FamilyId:   a.FamilyId,
-		FirstName:  a.FirstName,
-		MiddleName: a.MiddleName,
-		LastName:   a.LastName,
-		FatherId:   a.FatherId,
-		MotherId:   a.MotherId,
-		SpouseId:   a.SpouseId,
-		Birthday:   birthday,
-	}, nil
+	birthday, err := time.Parse(time.RFC3339, m.Birthday)
+	if err == nil {
+		member.Birthday = birthday
+	}
+
+	return member
 }
 
-func (a *Member) UnmarshalJSON(b []byte) error {
+func (m *Member) UnmarshalJSON(b []byte) error {
 	raw := memberRaw{}
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
+	*m = raw.parse()
+	return nil
+}
 
-	member, err := raw.parse()
-	if err != nil {
-		return err
+func (m *Member) Patch(member Member) {
+	if m == nil {
+		return
 	}
 
-	*a = member
-	return nil
+	if member.FamilyId != "" {
+		m.FamilyId = member.FamilyId
+	}
+
+	if member.FirstName != "" {
+		m.FirstName = member.FirstName
+	}
+
+	if member.MiddleName != "" {
+		m.MiddleName = member.MiddleName
+	}
+
+	if member.LastName != "" {
+		m.LastName = member.LastName
+	}
+
+	if member.FatherId != nil {
+		val := *member.FatherId
+		m.FatherId = &val
+	}
+
+	if member.MotherId != nil {
+		val := *member.MotherId
+		m.MotherId = &val
+	}
+
+	if member.SpouseId != nil {
+		val := *member.SpouseId
+		m.SpouseId = &val
+	}
+
+	if !member.Birthday.IsZero() {
+		m.Birthday = member.Birthday
+	}
 }

@@ -188,6 +188,40 @@ func (req *GetMemberRequest) GetId() string {
 	return req.Id
 }
 
+// UpdateMemberRequest
+//
+// Request by UpdateMember Service.
+//
+// swagger:model
+type UpdateMemberRequest struct {
+	// the family for the request
+	//
+	// required: true
+	// example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+	Id string `json:"id"`
+
+	// the family for the request
+	//
+	// required: true
+	Member family.Member `json:"member"`
+}
+
+func (req *UpdateMemberRequest) GetId() string {
+	if req == nil {
+		return ""
+	}
+
+	return req.Id
+}
+
+func (req *UpdateMemberRequest) GetMember() family.Member {
+	if req == nil {
+		return family.Member{}
+	}
+
+	return req.Member
+}
+
 // DeleteMemberRequest
 //
 // Request by DeleteMember Service.

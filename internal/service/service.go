@@ -10,7 +10,6 @@ import (
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/requestid"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/verify"
 	"net/http"
-	"strings"
 )
 
 type Service interface {
@@ -22,8 +21,8 @@ type Service interface {
 
 	CreateMember(ctx context.Context, req *CreateMemberRequest) (*CreateMemberResponse, error)
 	GetMember(ctx context.Context, req *GetMemberRequest) (*GetMemberResponse, error)
-	/*ListMembers (ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
-	UpdateMember (ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)*/
+	//ListMembers (ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
+	UpdateMember(ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)
 	DeleteMember(ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error)
 }
 
@@ -126,16 +125,8 @@ func (service FamilyService) UpdateFamily(ctx context.Context, req *UpdateFamily
 
 	newFam := req.GetFamily()
 	if len(newFam.Name) > 0 {
-		if strings.ReplaceAll(newFam.Name, " ", "") == "" {
-			return nil, errors.Annotate(family.ErrorFamilyBadRequest, "name should have a character different of a space")
-		}
-
-		if len(newFam.Name) < 3 {
-			return nil, errors.Annotate(family.ErrorFamilyBadRequest, "name should be at least 3 characters")
-		}
-
-		if len(newFam.Name) > 30 {
-			return nil, errors.Annotate(family.ErrorFamilyBadRequest, "name should be at maximum 30 characters")
+		if err := verify.StringLength(newFam.Name, 3, 30); err != nil {
+			return nil, errors.Wrap(family.ErrorFamilyBadRequest, err)
 		}
 	}
 
@@ -245,6 +236,88 @@ func (service FamilyService) GetMember(ctx context.Context, req *GetMemberReques
 	}
 
 	return &GetMemberResponse{
+		Id:      requestId,
+		Code:    http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
+		Result:  *member,
+	}, nil
+}
+
+func (service FamilyService) UpdateMember(ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error) {
+	requestId, _ := requestid.GetRequestId(ctx)
+
+	id := req.GetId()
+	if id == "" {
+		return nil, errors.Annotate(family.ErrorFamilyBadRequest, "family id should be provided")
+	}
+
+	newMember := req.GetMember()
+
+	if newMember.FatherId != nil && *newMember.FatherId == id {
+		return nil, errors.Annotate(family.ErrorMemberBadRequest, "father_id should not be the same as the id")
+	}
+
+	if newMember.MotherId != nil && *newMember.MotherId == id {
+		return nil, errors.Annotate(family.ErrorMemberBadRequest, "mother_id should not be the same as the id")
+	}
+
+	if newMember.SpouseId != nil && *newMember.SpouseId == id {
+		return nil, errors.Annotate(family.ErrorMemberBadRequest, "spouse_id should not be the same as the id")
+	}
+
+	if len(newMember.FirstName) > 0 {
+		if err := verify.StringLength(newMember.FirstName, 3, 30); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "first_name"))
+		}
+	}
+
+	if len(newMember.MiddleName) > 0 {
+		if err := verify.StringLength(newMember.MiddleName, 3, 30); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "middle_name"))
+		}
+	}
+
+	if len(newMember.LastName) > 0 {
+		if err := verify.StringLength(newMember.LastName, 3, 30); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "last_name"))
+		}
+	}
+
+	if len(newMember.FamilyId) > 0 {
+		if _, err := service.familyRepo.GetFamilyById(ctx, newMember.FamilyId); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "family_id"))
+		}
+	}
+
+	if newMember.FatherId != nil && *newMember.FatherId != "" {
+		if _, err := service.memberRepo.GetMemberById(ctx, *newMember.FatherId); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "father_id"))
+		}
+	}
+
+	if newMember.MotherId != nil && *newMember.MotherId != "" {
+		if _, err := service.memberRepo.GetMemberById(ctx, *newMember.MotherId); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "mother_id"))
+		}
+	}
+
+	if newMember.SpouseId != nil && *newMember.SpouseId != "" {
+		if _, err := service.memberRepo.GetMemberById(ctx, *newMember.SpouseId); err != nil {
+			return nil, errors.Wrap(family.ErrorMemberBadRequest, errors.Annotate(err, "spouse_id"))
+		}
+	}
+
+	member, err := service.memberRepo.GetMemberById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	member.Patch(newMember)
+	if err := service.memberRepo.UpdateMemberById(ctx, id, *member); err != nil {
+		return nil, err
+	}
+
+	return &UpdateMemberResponse{
 		Id:      requestId,
 		Code:    http.StatusOK,
 		Message: http.StatusText(http.StatusOK),

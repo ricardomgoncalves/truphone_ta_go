@@ -238,7 +238,7 @@ func (p *Repo) checkFamilyError(err error) error {
 		case family.ErrorFamilyNotFound:
 			return err
 		case gorm.ErrRecordNotFound:
-			return errors.Wrap(family.ErrorFamilyNotFound, err)
+			return errors.Wrap(family.ErrorFamilyNotFound, gorm.ErrRecordNotFound)
 		default:
 			return errors.Wrap(family.ErrorFamilyUnknown, err)
 		}
@@ -266,7 +266,7 @@ func (p *Repo) checkMemberError(err error) error {
 		case family.ErrorMemberNotFound:
 			return err
 		case gorm.ErrRecordNotFound:
-			return errors.Wrap(family.ErrorMemberNotFound, err)
+			return errors.Wrap(family.ErrorMemberNotFound, gorm.ErrRecordNotFound)
 		default:
 			return errors.Wrap(family.ErrorMemberUnknown, err)
 		}

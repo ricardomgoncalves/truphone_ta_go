@@ -3,7 +3,7 @@ consumes:
 - application/json
 definitions:
   CreateFamilyRequest:
-    description: Response by CreateFamily Service.
+    description: Request by CreateFamily Service.
     properties:
       family:
         $ref: '#/definitions/Family'
@@ -43,8 +43,49 @@ definitions:
     title: CreateFamilyResponse
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  CreateMemberRequest:
+    description: Request by CreateMember Service.
+    properties:
+      member:
+        $ref: '#/definitions/Member'
+    required:
+    - member
+    title: CreateMemberRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  CreateMemberResponse:
+    description: Response by CreateMember Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the message for the request
+        type: string
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: CreateMemberResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   DeleteFamilyRequest:
-    description: Response by DeleteFamily Service.
+    description: Request by DeleteFamily Service.
     properties:
       id:
         description: the family for the request
@@ -82,6 +123,45 @@ definitions:
     title: DeleteFamilyResponse
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  DeleteMemberRequest:
+    description: Request by DeleteMember Service.
+    properties:
+      id:
+        description: the family for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+    required:
+    - id
+    title: DeleteMemberRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  DeleteMemberResponse:
+    description: Response by DeleteMember Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+    required:
+    - id
+    - code
+    - message
+    title: DeleteMemberResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   Family:
     description: A family can have a name and a country.
     properties:
@@ -110,7 +190,7 @@ definitions:
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/pkg/family
   GetFamilyRequest:
-    description: Response by GetFamily Service.
+    description: Request by GetFamily Service.
     properties:
       id:
         description: the family for the request
@@ -123,7 +203,7 @@ definitions:
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   GetFamilyResponse:
-    description: Gets a family.
+    description: Response by GetFamily Service.
     properties:
       code:
         description: the response code for the request
@@ -148,7 +228,105 @@ definitions:
     - code
     - message
     - result
-    title: Response by GetFamily Service.
+    title: GetFamilyResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  GetMemberRequest:
+    description: Request by GetMember Service.
+    properties:
+      id:
+        description: the family for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+    required:
+    - id
+    title: GetMemberRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  GetMemberResponse:
+    description: Response by GetMember Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        $ref: '#/definitions/Member'
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: GetMemberResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListFamiliesRequest:
+    description: Request by ListFamilies Service.
+    properties:
+      country_code:
+        description: the country code for the request
+        example: PT
+        type: string
+        x-go-name: CountryCode
+      limit:
+        description: the limit for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Limit
+      offset:
+        description: the offset for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Offset
+    title: ListFamiliesRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListFamiliesResponse:
+    description: Response by ListFamilies Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the families for the request
+        items:
+          $ref: '#/definitions/Family'
+        type: array
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: ListFamiliesResponse
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   Member:
@@ -172,6 +350,7 @@ definitions:
         x-go-name: FatherId
       first_name:
         description: the first name for this member
+        maxLength: 30
         minLength: 3
         type: string
         x-go-name: FirstName
@@ -182,11 +361,13 @@ definitions:
         x-go-name: Id
       last_name:
         description: the last name for this member
+        maxLength: 30
         minLength: 3
         type: string
         x-go-name: LastName
       middle_name:
         description: the middle name for this member
+        maxLength: 30
         minLength: 3
         type: string
         x-go-name: MiddleName
@@ -210,6 +391,96 @@ definitions:
     title: Member
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/pkg/family
+  UpdateFamilyRequest:
+    description: Request by UpdateFamily Service.
+    properties:
+      family:
+        $ref: '#/definitions/Family'
+      id:
+        description: the family for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+    required:
+    - id
+    - family
+    title: UpdateFamilyRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  UpdateFamilyResponse:
+    description: Response by UpdateFamily Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        $ref: '#/definitions/Family'
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: UpdateFamilyResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  UpdateMemberRequest:
+    description: Request by UpdateMember Service.
+    properties:
+      id:
+        description: the family for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      member:
+        $ref: '#/definitions/Member'
+    required:
+    - id
+    - member
+    title: UpdateMemberRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  UpdateMemberResponse:
+    description: Response by UpdateMember Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        $ref: '#/definitions/Member'
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: UpdateMemberResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
 host: 127.0.0.1:8080
 info:
   contact:
@@ -226,6 +497,31 @@ info:
   version: 0.0.1
 paths:
   /families:
+    get:
+      operationId: listFamilies
+      parameters:
+      - description: offset number of results to return
+        format: int32
+        in: query
+        name: offset
+        type: integer
+      - description: maximum number of results to return
+        format: int32
+        in: query
+        name: limit
+        type: integer
+      - description: country code to filter
+        format: string
+        in: query
+        name: country
+        type: string
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/ListFamiliesResponse'
+      summary: Lists Families.
     post:
       operationId: createFamily
       parameters:
@@ -269,6 +565,91 @@ paths:
           schema:
             $ref: '#/definitions/GetFamilyResponse'
       summary: Gets a Family.
+    put:
+      operationId: updatedFamily
+      parameters:
+      - in: path
+        name: id
+        required: true
+      - description: family request
+        in: body
+        name: family
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateFamilyRequest'
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/UpdateFamilyResponse'
+      summary: Updates a Family.
+  /members:
+    post:
+      operationId: createMembers
+      parameters:
+      - description: member request
+        in: body
+        name: member
+        required: true
+        schema:
+          $ref: '#/definitions/CreateMemberRequest'
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/CreateMemberResponse'
+      summary: Creates a new Member.
+  /members/{id}:
+    delete:
+      operationId: deleteMember
+      parameters:
+      - description: member id
+        in: path
+        name: id
+        required: true
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/DeleteMemberResponse'
+      summary: Delete a Member.
+    post:
+      operationId: getMember
+      parameters:
+      - description: member id
+        in: path
+        name: id
+        required: true
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/GetMemberResponse'
+      summary: Gets a Member.
+    put:
+      operationId: updateMember
+      parameters:
+      - description: member id
+        in: path
+        name: id
+        required: true
+      - description: member request
+        in: body
+        name: member
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateMemberRequest'
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/UpdateMemberResponse'
+      summary: Update a Member.
 produces:
 - application/json
 schemes:

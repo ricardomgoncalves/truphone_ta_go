@@ -98,10 +98,9 @@ func TestMemberRaw_Parse(t *testing.T) {
 			Birthday:   "2012-02-03T00:04:05Z",
 		}
 
-		member, err := rawMember.parse()
+		member := rawMember.parse()
 		date, _ := time.Parse(time.RFC3339, "2012-02-03T00:04:05Z")
 
-		require.Nil(t, err, "error must be nil")
 		assert.Equal(t, id, member.Id, "Id must be equal")
 		assert.Equal(t, id, member.FamilyId, "FamilyId must be equal")
 		assert.Equal(t, "Ricardo", member.FirstName, "FirstName must be equal")
@@ -111,24 +110,6 @@ func TestMemberRaw_Parse(t *testing.T) {
 		assert.Equal(t, id, *member.MotherId, "MotherId must be equal")
 		assert.Equal(t, id, *member.SpouseId, "SpouseId must be equal")
 		assert.Equal(t, date, member.Birthday, "Birthday must be equal")
-	})
-
-	t.Run("should return an error", func(t *testing.T) {
-		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
-		rawMember := memberRaw{
-			Id:         id,
-			FamilyId:   id,
-			FirstName:  "Ricardo",
-			MiddleName: "Miguel",
-			LastName:   "Goncalves",
-			FatherId:   &id,
-			MotherId:   &id,
-			SpouseId:   &id,
-			Birthday:   "2012-02-03T0",
-		}
-
-		_, err := rawMember.parse()
-		require.NotNil(t, err, "error must not be nil")
 	})
 }
 
@@ -161,5 +142,91 @@ func TestMember_ToRaw(t *testing.T) {
 		assert.Equal(t, id, *rawMember.MotherId, "MotherId must be equal")
 		assert.Equal(t, id, *rawMember.SpouseId, "SpouseId must be equal")
 		assert.Equal(t, "2012-02-03T00:04:05Z", rawMember.Birthday, "Birthday must be equal")
+	})
+}
+
+func TestMember_Patch(t *testing.T) {
+	t.Run("should not do anything on nil member", func(t *testing.T) {
+		var fam *Member
+		fam.Patch(Member{})
+	})
+	t.Run("should only update family_id", func(t *testing.T) {
+		fam := &Member{
+			Id:       "id",
+			FamilyId: "family",
+		}
+		fam.Patch(Member{FamilyId: "updated"})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", fam.FamilyId)
+	})
+	t.Run("should only update first_name", func(t *testing.T) {
+		fam := &Member{
+			Id:        "id",
+			FirstName: "Member",
+		}
+		fam.Patch(Member{FirstName: "updated"})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", fam.FirstName)
+	})
+	t.Run("should only update middle_name", func(t *testing.T) {
+		fam := &Member{
+			Id:         "id",
+			MiddleName: "Member",
+		}
+		fam.Patch(Member{MiddleName: "updated"})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", fam.MiddleName)
+	})
+	t.Run("should only update last_name", func(t *testing.T) {
+		fam := &Member{
+			Id:       "id",
+			LastName: "Member",
+		}
+		fam.Patch(Member{LastName: "updated"})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", fam.LastName)
+	})
+	t.Run("should only update father_id", func(t *testing.T) {
+		fatherId1 := "Father"
+		fatherId2 := "updated"
+		fam := &Member{
+			Id:       "id",
+			FatherId: &fatherId1,
+		}
+		fam.Patch(Member{FatherId: &fatherId2})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", *fam.FatherId)
+	})
+	t.Run("should only update mother_id", func(t *testing.T) {
+		motherId1 := "Mother"
+		motherId2 := "updated"
+		fam := &Member{
+			Id:       "id",
+			MotherId: &motherId1,
+		}
+		fam.Patch(Member{MotherId: &motherId2})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", *fam.MotherId)
+	})
+	t.Run("should only update spouse_id", func(t *testing.T) {
+		spouseId1 := "Spouse"
+		spouseId2 := "updated"
+		fam := &Member{
+			Id:       "id",
+			SpouseId: &spouseId1,
+		}
+		fam.Patch(Member{SpouseId: &spouseId2})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, "updated", *fam.SpouseId)
+	})
+	t.Run("should only updated birthday", func(t *testing.T) {
+		fam := &Member{
+			Id:       "id",
+			Birthday: time.Now(),
+		}
+		tm := time.Now()
+		fam.Patch(Member{Birthday: tm})
+		assert.Equal(t, "id", fam.Id)
+		assert.Equal(t, tm, fam.Birthday)
 	})
 }

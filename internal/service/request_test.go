@@ -134,6 +134,29 @@ func TestGetMemberRequest_GetId(t *testing.T) {
 	})
 }
 
+func TestUpdateMemberRequest_GetId(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *UpdateMemberRequest
+		assert.Equal(t, "", req.GetId())
+	})
+	t.Run("should return id", func(t *testing.T) {
+		req := &UpdateMemberRequest{Id: "id"}
+		assert.Equal(t, "id", req.GetId())
+	})
+}
+
+func TestUpdateMemberRequest_GetMember(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *UpdateMemberRequest
+		assert.Equal(t, family.Member{}, req.GetMember())
+	})
+	t.Run("should return member", func(t *testing.T) {
+		member := family.Member{Id: "id"}
+		req := &UpdateMemberRequest{Member: member}
+		assert.Equal(t, member, req.GetMember())
+	})
+}
+
 func TestDeleteMemberRequest_GetId(t *testing.T) {
 	t.Run("should return nil on nil request", func(t *testing.T) {
 		var req *DeleteFamilyRequest
