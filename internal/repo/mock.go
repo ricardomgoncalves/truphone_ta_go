@@ -163,19 +163,24 @@ func (mr *MockMemberRepoMockRecorder) GetMemberById(ctx, id interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMemberById", reflect.TypeOf((*MockMemberRepo)(nil).GetMemberById), ctx, id)
 }
 
-// GetMembersByFamilyId mocks base method
-func (m *MockMemberRepo) GetMembersByFamilyId(ctx context.Context, familyId string, offset, limit *int) ([]family.Member, error) {
+// ListMembers mocks base method
+func (m *MockMemberRepo) ListMembers(ctx context.Context, options ...FilterOption) ([]family.Member, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMembersByFamilyId", ctx, familyId, offset, limit)
+	varargs := []interface{}{ctx}
+	for _, a := range options {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListMembers", varargs...)
 	ret0, _ := ret[0].([]family.Member)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetMembersByFamilyId indicates an expected call of GetMembersByFamilyId
-func (mr *MockMemberRepoMockRecorder) GetMembersByFamilyId(ctx, familyId, offset, limit interface{}) *gomock.Call {
+// ListMembers indicates an expected call of ListMembers
+func (mr *MockMemberRepoMockRecorder) ListMembers(ctx interface{}, options ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMembersByFamilyId", reflect.TypeOf((*MockMemberRepo)(nil).GetMembersByFamilyId), ctx, familyId, offset, limit)
+	varargs := append([]interface{}{ctx}, options...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListMembers", reflect.TypeOf((*MockMemberRepo)(nil).ListMembers), varargs...)
 }
 
 // UpdateMemberById mocks base method

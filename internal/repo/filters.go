@@ -7,6 +7,8 @@ type FilterOptions struct {
 	offset *uint32
 
 	countryCode *string
+	familyId    *string
+	parentId     *string
 }
 
 func WithLimit(limit uint32) FilterOption {
@@ -37,4 +39,24 @@ func WithCountryCode(countryCode string) FilterOption {
 
 func GetCountryCode(opts FilterOptions) *string {
 	return opts.countryCode
+}
+
+func WithFamilyId(familyId string) FilterOption {
+	return func(options *FilterOptions) {
+		options.familyId = &familyId
+	}
+}
+
+func GetFamilyId(opts FilterOptions) *string {
+	return opts.familyId
+}
+
+func WithParentId(parentId string) FilterOption {
+	return func(options *FilterOptions) {
+		options.parentId = &parentId
+	}
+}
+
+func GetParentId(opts FilterOptions) *string {
+	return opts.parentId
 }

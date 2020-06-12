@@ -59,3 +59,39 @@ func TestGetCountryCode(t *testing.T) {
 		assert.Equal(t, "PT", *GetCountryCode(opts))
 	})
 }
+
+func TestWithFamilyId(t *testing.T) {
+	t.Run("should set family_id", func(t *testing.T) {
+		opts := FilterOptions{}
+		WithFamilyId("PT")(&opts)
+		assert.Equal(t, "PT", *opts.familyId)
+	})
+}
+
+func TestGetFamilyId(t *testing.T) {
+	t.Run("should get family_id", func(t *testing.T) {
+		familyId := "PT"
+		opts := FilterOptions{
+			familyId: &familyId,
+		}
+		assert.Equal(t, "PT", *GetFamilyId(opts))
+	})
+}
+
+func TestWithParentId(t *testing.T) {
+	t.Run("should set parent_id", func(t *testing.T) {
+		opts := FilterOptions{}
+		WithParentId("PT")(&opts)
+		assert.Equal(t, "PT", *opts.parentId)
+	})
+}
+
+func TestGetParentId(t *testing.T) {
+	t.Run("should get parent_id", func(t *testing.T) {
+		parentId := "PT"
+		opts := FilterOptions{
+			parentId: &parentId,
+		}
+		assert.Equal(t, "PT", *GetParentId(opts))
+	})
+}

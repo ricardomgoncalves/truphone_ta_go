@@ -421,8 +421,23 @@ func TestFamilyService_DeleteFamily(t *testing.T) {
 		require.Nil(t, resp)
 	})
 
+	t.Run("should not delete with family not empty", func(t *testing.T) {
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return([]family.Member{{Id: "id"}}, nil)
+
+		resp, err := service.DeleteFamily(ctx, &DeleteFamilyRequest{Id: "id"})
+		require.Equal(t, errors.Annotate(family.ErrorFamilyBadRequest, "family is not empty"), err)
+		require.Nil(t, resp)
+	})
+
 	t.Run("should return error on repository error", func(t *testing.T) {
 		errToReturn := errors.New("some random error")
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, nil)
 		famRepo.EXPECT().
 			DeleteFamilyById(gomock.Eq(ctx), gomock.Eq("id")).
 			Times(1).
@@ -434,6 +449,10 @@ func TestFamilyService_DeleteFamily(t *testing.T) {
 	})
 
 	t.Run("should return no error", func(t *testing.T) {
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, nil)
 		famRepo.EXPECT().
 			DeleteFamilyById(gomock.Eq(ctx), gomock.Eq("id")).
 			Times(1).
@@ -1114,8 +1133,23 @@ func TestFamilyService_DeleteMember(t *testing.T) {
 		require.Nil(t, resp)
 	})
 
+	t.Run("should not delete with children not empty", func(t *testing.T) {
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return([]family.Member{{Id: "id"}}, nil)
+
+		resp, err := service.DeleteMember(ctx, &DeleteMemberRequest{Id: "id"})
+		require.Equal(t, errors.Annotate(family.ErrorMemberBadRequest, "this member currently has children"), err)
+		require.Nil(t, resp)
+	})
+
 	t.Run("should return error on repository error", func(t *testing.T) {
 		errToReturn := errors.New("some random error")
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, nil)
 		memRepo.EXPECT().
 			DeleteMemberById(gomock.Eq(ctx), gomock.Eq("id")).
 			Times(1).
@@ -1127,6 +1161,10 @@ func TestFamilyService_DeleteMember(t *testing.T) {
 	})
 
 	t.Run("should return member", func(t *testing.T) {
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, nil)
 		memRepo.EXPECT().
 			DeleteMemberById(gomock.Eq(ctx), gomock.Any()).
 			Times(1).

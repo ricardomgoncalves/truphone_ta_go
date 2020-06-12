@@ -161,6 +161,10 @@ func (service FamilyService) DeleteFamily(ctx context.Context, req *DeleteFamily
 		return nil, errors.Annotate(family.ErrorFamilyBadRequest, "family id should be provided")
 	}
 
+	if members, err := service.memberRepo.ListMembers(ctx, repo.WithFamilyId(id)); err == nil && len(members) > 0 {
+		return nil, errors.Annotate(family.ErrorFamilyBadRequest, "family is not empty")
+	}
+
 	if err := service.familyRepo.DeleteFamilyById(ctx, id); err != nil {
 		return nil, err
 	}
@@ -331,6 +335,10 @@ func (service FamilyService) DeleteMember(ctx context.Context, req *DeleteMember
 	id := req.GetId()
 	if id == "" {
 		return nil, errors.Annotate(family.ErrorMemberBadRequest, "member id should be provided")
+	}
+
+	if members, err := service.memberRepo.ListMembers(ctx, repo.WithParentId(id)); err == nil && len(members) > 0 {
+		return nil, errors.Annotate(family.ErrorMemberBadRequest, "this member currently has children")
 	}
 
 	if err := service.memberRepo.DeleteMemberById(ctx, id); err != nil {

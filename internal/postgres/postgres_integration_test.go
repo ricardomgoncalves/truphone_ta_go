@@ -221,48 +221,6 @@ func TestRepo_GetMemberById(t *testing.T) {
 	})
 }
 
-func TestRepo_GetMembersByFamilyId(t *testing.T) {
-	repo := getRepo(t)
-	id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
-
-	t.Run("should return list of family member", func(t *testing.T) {
-		fam, err := repo.GetMembersByFamilyId(context.Background(), id, nil, nil)
-		require.Nil(t, err)
-		assert.Equal(t, 3, len(fam))
-	})
-	t.Run("should return list with correct limit", func(t *testing.T) {
-		limit := 2
-		fam, err := repo.GetMembersByFamilyId(context.Background(), id, nil, &limit)
-		require.Nil(t, err)
-		assert.Equal(t, 2, len(fam))
-	})
-	t.Run("should return list with correct offset", func(t *testing.T) {
-		offset := 1
-		fam, err := repo.GetMembersByFamilyId(context.Background(), id, &offset, nil)
-		require.Nil(t, err)
-		assert.Equal(t, 2, len(fam))
-	})
-	t.Run("should return list and ignore limit", func(t *testing.T) {
-		limit := 0
-		fam, err := repo.GetMembersByFamilyId(context.Background(), id, nil, &limit)
-		require.Nil(t, err)
-		assert.Equal(t, 3, len(fam))
-	})
-	t.Run("should return list and ignore offset", func(t *testing.T) {
-		offset := 0
-		fam, err := repo.GetMembersByFamilyId(context.Background(), id, &offset, nil)
-		require.Nil(t, err)
-		assert.Equal(t, 3, len(fam))
-	})
-	t.Run("should return list with offset and limit", func(t *testing.T) {
-		offset := 1
-		limit := 1
-		fam, err := repo.GetMembersByFamilyId(context.Background(), id, &offset, &limit)
-		require.Nil(t, err)
-		assert.Equal(t, 1, len(fam))
-	})
-}
-
 func TestRepo_UpdateMemberById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should update record", func(t *testing.T) {

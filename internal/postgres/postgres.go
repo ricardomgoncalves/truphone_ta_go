@@ -148,18 +148,29 @@ func (p Repo) GetMemberById(ctx context.Context, id string) (*family.Member, err
 	return row.Value(), nil
 }
 
-func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId string, offset *int, limit *int) ([]family.Member, error) {
+func (p Repo) ListMembers(ctx context.Context, options ...repo.FilterOption) ([]family.Member, error) {
 	db := p.db.Set("ctx", ctx)
 
-	if limit != nil && *limit != 0 {
-		db = db.Limit(*limit)
+	opts := repo.FilterOptions{}
+	for _, option := range options {
+		option(&opts)
 	}
 
-	if offset != nil && *offset != 0 {
-		db = db.Offset(*offset)
+	if val := repo.GetLimit(opts); val != nil && *val != 0 {
+		db = db.Limit(*val)
 	}
 
-	db = db.Where("family_id = ?", familyId)
+	if val := repo.GetOffset(opts); val != nil && *val != 0 {
+		db = db.Offset(*val)
+	}
+
+	if val := repo.GetFamilyId(opts); val != nil && *val != "" {
+		db = db.Where("family_id = ?", *val)
+	}
+
+	if val := repo.GetParentId(opts); val != nil && *val != "" {
+		db = db.Where("mother = ? OR father = ?", *val, *val)
+	}
 
 	rows := make([]*memberRow, 0, 200)
 	if err := db.Find(&rows).Error; err != nil {
@@ -174,7 +185,6 @@ func (p Repo) GetMembersByFamilyId(ctx context.Context, familyId string, offset 
 
 		results[i] = *row.Value()
 	}
-
 	return results, nil
 }
 
