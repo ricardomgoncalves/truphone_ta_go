@@ -30,3 +30,17 @@ type Family struct {
 func NewFamilyWithId(id string) Family {
 	return Family{Id: id}
 }
+
+func (f *Family) Patch(fam Family) {
+	if f == nil {
+		return
+	}
+
+	if fam.Name != "" {
+		f.Name = fam.Name
+	}
+
+	if fam.CountryCode != "" {
+		f.CountryCode = fam.CountryCode
+	}
+}

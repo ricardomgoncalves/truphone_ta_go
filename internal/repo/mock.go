@@ -63,6 +63,26 @@ func (mr *MockFamilyRepoMockRecorder) GetFamilyById(ctx, id interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFamilyById", reflect.TypeOf((*MockFamilyRepo)(nil).GetFamilyById), ctx, id)
 }
 
+// ListFamilies mocks base method
+func (m *MockFamilyRepo) ListFamilies(ctx context.Context, opts ...FilterOption) ([]family.Family, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListFamilies", varargs...)
+	ret0, _ := ret[0].([]family.Family)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFamilies indicates an expected call of ListFamilies
+func (mr *MockFamilyRepoMockRecorder) ListFamilies(ctx interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFamilies", reflect.TypeOf((*MockFamilyRepo)(nil).ListFamilies), varargs...)
+}
+
 // UpdateFamilyById mocks base method
 func (m *MockFamilyRepo) UpdateFamilyById(ctx context.Context, id string, fam family.Family) error {
 	m.ctrl.T.Helper()

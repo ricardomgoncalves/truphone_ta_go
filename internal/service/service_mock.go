@@ -48,6 +48,51 @@ func (mr *MockServiceMockRecorder) CreateFamily(ctx, req interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFamily", reflect.TypeOf((*MockService)(nil).CreateFamily), ctx, req)
 }
 
+// GetFamily mocks base method
+func (m *MockService) GetFamily(ctx context.Context, req *GetFamilyRequest) (*GetFamilyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFamily", ctx, req)
+	ret0, _ := ret[0].(*GetFamilyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFamily indicates an expected call of GetFamily
+func (mr *MockServiceMockRecorder) GetFamily(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFamily", reflect.TypeOf((*MockService)(nil).GetFamily), ctx, req)
+}
+
+// ListFamilies mocks base method
+func (m *MockService) ListFamilies(ctx context.Context, req *ListFamiliesRequest) (*ListFamiliesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFamilies", ctx, req)
+	ret0, _ := ret[0].(*ListFamiliesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFamilies indicates an expected call of ListFamilies
+func (mr *MockServiceMockRecorder) ListFamilies(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFamilies", reflect.TypeOf((*MockService)(nil).ListFamilies), ctx, req)
+}
+
+// UpdateFamily mocks base method
+func (m *MockService) UpdateFamily(ctx context.Context, req *UpdateFamilyRequest) (*UpdateFamilyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFamily", ctx, req)
+	ret0, _ := ret[0].(*UpdateFamilyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateFamily indicates an expected call of UpdateFamily
+func (mr *MockServiceMockRecorder) UpdateFamily(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFamily", reflect.TypeOf((*MockService)(nil).UpdateFamily), ctx, req)
+}
+
 // DeleteFamily mocks base method
 func (m *MockService) DeleteFamily(ctx context.Context, req *DeleteFamilyRequest) (*DeleteFamilyResponse, error) {
 	m.ctrl.T.Helper()
@@ -61,4 +106,19 @@ func (m *MockService) DeleteFamily(ctx context.Context, req *DeleteFamilyRequest
 func (mr *MockServiceMockRecorder) DeleteFamily(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFamily", reflect.TypeOf((*MockService)(nil).DeleteFamily), ctx, req)
+}
+
+// CreateMember mocks base method
+func (m *MockService) CreateMember(ctx context.Context, req *CreateMemberRequest) (*CreateMemberResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateMember", ctx, req)
+	ret0, _ := ret[0].(*CreateMemberResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateMember indicates an expected call of CreateMember
+func (mr *MockServiceMockRecorder) CreateMember(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMember", reflect.TypeOf((*MockService)(nil).CreateMember), ctx, req)
 }

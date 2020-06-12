@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-
 	"github.com/jinzhu/gorm"
 	"github.com/lib/pq"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/repo"
@@ -48,6 +47,42 @@ func (p Repo) GetFamilyById(ctx context.Context, id string) (*family.Family, err
 	}
 
 	return row.Value(), nil
+}
+
+func (p Repo) ListFamilies(ctx context.Context, options ...repo.FilterOption) ([]family.Family, error) {
+	db := p.db.Set("ctx", ctx)
+
+	opts := repo.FilterOptions{}
+	for _, option := range options {
+		option(&opts)
+	}
+
+	if val := repo.GetLimit(opts); val != nil && *val != 0 {
+		db = db.Limit(*val)
+	}
+
+	if val := repo.GetOffset(opts); val != nil && *val != 0 {
+		db = db.Offset(*val)
+	}
+
+	if val := repo.GetCountryCode(opts); val != nil {
+		db = db.Where("country_code = '" + *val + "'")
+	}
+
+	rows := make([]*familyRow, 0, 200)
+	if err := db.Find(&rows).Error; err != nil {
+		return nil, p.checkFamilyError(err)
+	}
+
+	results := make([]family.Family, len(rows))
+	for i, row := range rows {
+		if row == nil {
+			continue
+		}
+
+		results[i] = *row.Value()
+	}
+	return results, nil
 }
 
 func (p Repo) UpdateFamilyById(ctx context.Context, id string, fam family.Family) error {

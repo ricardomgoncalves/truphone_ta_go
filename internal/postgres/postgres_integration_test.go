@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+	"github.com/ricardomgoncalves/truphone_ta_go/internal/repo"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -43,29 +43,25 @@ func getRepo(t *testing.T) *Repo {
 func TestRepo_CreateFamily(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should create family without any error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
 		fam := family.Family{
 			Id:          id,
 			Name:        "Family Test",
 			CountryCode: "ES",
 		}
 
-		err = repo.CreateFamily(context.Background(), fam)
+		err := repo.CreateFamily(context.Background(), fam)
 		require.Nil(t, err)
 	})
 	t.Run("should return error on create", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
 		fam := family.Family{
 			Id:          id,
 			Name:        "Family Test",
 			CountryCode: "ES",
 		}
 
-		err = repo.CreateFamily(context.Background(), fam)
+		err := repo.CreateFamily(context.Background(), fam)
 		require.NotNil(t, err)
 	})
 }
@@ -73,9 +69,7 @@ func TestRepo_CreateFamily(t *testing.T) {
 func TestRepo_GetFamilyById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should return family by id", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038")
-		require.Nil(t, err)
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
 		fam, err := repo.GetFamilyById(context.Background(), id)
 		require.Nil(t, err)
 		assert.Equal(t, id, fam.Id)
@@ -83,21 +77,52 @@ func TestRepo_GetFamilyById(t *testing.T) {
 		assert.Equal(t, "PT", fam.CountryCode)
 	})
 	t.Run("should return error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da037")
-		require.Nil(t, err)
-
-		_, err = repo.GetFamilyById(context.Background(), id)
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da037"
+		_, err := repo.GetFamilyById(context.Background(), id)
 		require.NotNil(t, err)
+	})
+}
+
+func TestRepo_ListFamilies(t *testing.T) {
+	rp := getRepo(t)
+	t.Run("should return all families", func(t *testing.T) {
+		options := make([]repo.FilterOption, 0)
+		fams, err := rp.ListFamilies(context.Background(), options...)
+		t.Log(fams)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(fams))
+	})
+	t.Run("should return all families", func(t *testing.T) {
+		options := make([]repo.FilterOption, 0)
+		options = append(options, repo.WithCountryCode("ES"))
+
+		fams, err := rp.ListFamilies(context.Background(), options...)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(fams))
+	})
+	t.Run("should return all families", func(t *testing.T) {
+		options := make([]repo.FilterOption, 0)
+		options = append(options, repo.WithLimit(1))
+
+		fams, err := rp.ListFamilies(context.Background(), options...)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(fams))
+	})
+	t.Run("should return all families", func(t *testing.T) {
+		options := make([]repo.FilterOption, 0)
+		options = append(options, repo.WithOffset(1))
+
+		fams, err := rp.ListFamilies(context.Background(), options...)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(fams))
 	})
 }
 
 func TestRepo_UpdateFamilyById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should update record", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
-		err = repo.UpdateFamilyById(context.Background(), id, family.Family{
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
+		err := repo.UpdateFamilyById(context.Background(), id, family.Family{
 			Id:          id,
 			Name:        "Family Updated",
 			CountryCode: "UK",
@@ -112,10 +137,8 @@ func TestRepo_UpdateFamilyById(t *testing.T) {
 		assert.Equal(t, "UK", rFam.CountryCode)
 	})
 	t.Run("should return not found error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da03c")
-		require.Nil(t, err)
-
-		err = repo.UpdateFamilyById(context.Background(), id, family.Family{
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da03c"
+		err := repo.UpdateFamilyById(context.Background(), id, family.Family{
 			Id:          id,
 			Name:        "Family Updated",
 			CountryCode: "UK",
@@ -128,20 +151,16 @@ func TestRepo_UpdateFamilyById(t *testing.T) {
 func TestRepo_DeleteFamilyById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should delete record", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
-		err = repo.DeleteFamilyById(context.Background(), id)
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
+		err := repo.DeleteFamilyById(context.Background(), id)
 		require.Nil(t, err)
 
 		_, err = repo.GetFamilyById(context.Background(), id)
 		require.NotNil(t, err)
 	})
 	t.Run("should return not found error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
-		err = repo.DeleteFamilyById(context.Background(), id)
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
+		err := repo.DeleteFamilyById(context.Background(), id)
 		require.NotNil(t, err)
 		assert.Equal(t, family.ErrorFamilyNotFound, err)
 	})
@@ -150,9 +169,7 @@ func TestRepo_DeleteFamilyById(t *testing.T) {
 func TestRepo_CreateMember(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should create member", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
 		member := family.Member{
 			Id:         id,
 			FamilyId:   id,
@@ -165,13 +182,11 @@ func TestRepo_CreateMember(t *testing.T) {
 			Birthday:   time.Now(),
 		}
 
-		err = repo.CreateMember(context.Background(), member)
+		err := repo.CreateMember(context.Background(), member)
 		require.Nil(t, err)
 	})
 	t.Run("should return error on create", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
 		member := family.Member{
 			Id:         id,
 			FamilyId:   id,
@@ -184,7 +199,7 @@ func TestRepo_CreateMember(t *testing.T) {
 			Birthday:   time.Now(),
 		}
 
-		err = repo.CreateMember(context.Background(), member)
+		err := repo.CreateMember(context.Background(), member)
 		require.NotNil(t, err)
 	})
 }
@@ -192,9 +207,7 @@ func TestRepo_CreateMember(t *testing.T) {
 func TestRepo_GetMemberById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should return member by id", func(t *testing.T) {
-		id, err := uuid.Parse("11810f35-309a-4836-b7e9-1fee57bed924")
-		require.Nil(t, err)
-
+		id := "11810f35-309a-4836-b7e9-1fee57bed924"
 		member, err := repo.GetMemberById(context.Background(), id)
 		require.Nil(t, err)
 		assert.Equal(t, id, member.Id)
@@ -202,19 +215,15 @@ func TestRepo_GetMemberById(t *testing.T) {
 		assert.Equal(t, "1", member.LastName)
 	})
 	t.Run("should return error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da037")
-		require.Nil(t, err)
-
-		_, err = repo.GetMemberById(context.Background(), id)
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da037"
+		_, err := repo.GetMemberById(context.Background(), id)
 		require.NotNil(t, err)
 	})
 }
 
 func TestRepo_GetMembersByFamilyId(t *testing.T) {
 	repo := getRepo(t)
-
-	id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038")
-	require.Nil(t, err)
+	id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038"
 
 	t.Run("should return list of family member", func(t *testing.T) {
 		fam, err := repo.GetMembersByFamilyId(context.Background(), id, nil, nil)
@@ -257,10 +266,8 @@ func TestRepo_GetMembersByFamilyId(t *testing.T) {
 func TestRepo_UpdateMemberById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should update record", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
-		err = repo.UpdateMemberById(context.Background(), id, family.Member{
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
+		err := repo.UpdateMemberById(context.Background(), id, family.Member{
 			Id:       id,
 			LastName: "Updated",
 		})
@@ -273,10 +280,8 @@ func TestRepo_UpdateMemberById(t *testing.T) {
 		assert.Equal(t, "Updated", rFam.LastName)
 	})
 	t.Run("should return not found error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da03c")
-		require.Nil(t, err)
-
-		err = repo.UpdateMemberById(context.Background(), id, family.Member{
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da03c"
+		err := repo.UpdateMemberById(context.Background(), id, family.Member{
 			Id:       id,
 			LastName: "Updated",
 		})
@@ -288,20 +293,16 @@ func TestRepo_UpdateMemberById(t *testing.T) {
 func TestRepo_DeleteMemberById(t *testing.T) {
 	repo := getRepo(t)
 	t.Run("should delete record", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
-		err = repo.DeleteMemberById(context.Background(), id)
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
+		err := repo.DeleteMemberById(context.Background(), id)
 		require.Nil(t, err)
 
 		_, err = repo.GetMemberById(context.Background(), id)
 		require.NotNil(t, err)
 	})
 	t.Run("should return not found error", func(t *testing.T) {
-		id, err := uuid.Parse("9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036")
-		require.Nil(t, err)
-
-		err = repo.DeleteMemberById(context.Background(), id)
+		id := "9fadb3cc-74ee-4ff7-8bd5-ffa1d34da036"
+		err := repo.DeleteMemberById(context.Background(), id)
 		require.NotNil(t, err)
 		assert.Equal(t, family.ErrorMemberNotFound, err)
 	})

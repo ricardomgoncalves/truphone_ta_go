@@ -109,6 +109,48 @@ definitions:
     title: Family
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/pkg/family
+  GetFamilyRequest:
+    description: Response by GetFamily Service.
+    properties:
+      id:
+        description: the family for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+    required:
+    - id
+    title: GetFamilyRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  GetFamilyResponse:
+    description: Gets a family.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        $ref: '#/definitions/Family'
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: Response by GetFamily Service.
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   Member:
     description: A member can have a father, mother and spouse.
     properties:
@@ -202,7 +244,7 @@ paths:
       summary: Creates a new Family.
   /families/{id}:
     delete:
-      operationId: createFamily
+      operationId: deleteFamily
       parameters:
       - in: path
         name: id
@@ -213,7 +255,20 @@ paths:
         default:
           schema:
             $ref: '#/definitions/DeleteFamilyResponse'
-      summary: Creates a new Family.
+      summary: Deletes a Family.
+    get:
+      operationId: getFamily
+      parameters:
+      - in: path
+        name: id
+        required: true
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/GetFamilyResponse'
+      summary: Gets a Family.
 produces:
 - application/json
 schemes:

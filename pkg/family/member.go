@@ -2,7 +2,6 @@ package family
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 )
 
@@ -28,18 +27,21 @@ type Member struct {
 	//
 	// required: true
 	// min length: 3
+	// max length: 30
 	FirstName string `json:"first_name"`
 
 	// the middle name for this member
 	//
 	// required: true
 	// min length: 3
+	// max length: 30
 	MiddleName string `json:"middle_name,omitempty"`
 
 	// the last name for this member
 	//
 	// required: true
 	// min length: 3
+	// max length: 30
 	LastName string `json:"last_name"`
 
 	// the father id for this member
@@ -95,7 +97,6 @@ func (a Member) toRaw() memberRaw {
 }
 
 func (a memberRaw) parse() (Member, error) {
-	log.Println(a)
 	birthday, err := time.Parse(time.RFC3339, a.Birthday)
 	if err != nil {
 		return Member{}, err

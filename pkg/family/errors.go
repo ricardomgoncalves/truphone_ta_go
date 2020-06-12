@@ -13,6 +13,7 @@ var (
 var (
 	ErrorMemberUnknown       = errors.WithCode(errors.New("unknown error"), 500)
 	ErrorMemberLocked        = errors.WithCode(errors.New("resource locked"), 500)
+	ErrorMemberBadRequest    = errors.WithCode(errors.New("bad request"), 400)
 	ErrorMemberNotFound      = errors.WithCode(errors.New("not found"), 404)
 	ErrorMemberAlreadyExists = errors.WithCode(errors.New("already exists"), 409)
 )
