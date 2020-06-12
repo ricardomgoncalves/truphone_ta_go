@@ -228,19 +228,19 @@ func (p *Repo) checkFamilyError(err error) error {
 		case "42710":
 			fallthrough
 		case "23505":
-			return errors.Wrap(err, family.ErrorFamilyAlreadyExists)
+			return errors.Wrap(family.ErrorFamilyAlreadyExists, err)
 		case "55006":
-			return errors.Wrap(err, family.ErrorFamilyLocked)
+			return errors.Wrap(family.ErrorFamilyLocked, err)
 		}
-		return errors.Wrap(err, family.ErrorFamilyUnknown)
+		return errors.Wrap(family.ErrorFamilyUnknown, err)
 	default:
 		switch err {
 		case family.ErrorFamilyNotFound:
 			return err
 		case gorm.ErrRecordNotFound:
-			return errors.Wrap(err, family.ErrorFamilyNotFound)
+			return errors.Wrap(family.ErrorFamilyNotFound, err)
 		default:
-			return errors.Wrap(err, family.ErrorFamilyUnknown)
+			return errors.Wrap(family.ErrorFamilyUnknown, err)
 		}
 	}
 }
@@ -256,19 +256,19 @@ func (p *Repo) checkMemberError(err error) error {
 		case "42710":
 			fallthrough
 		case "23505":
-			return errors.Wrap(err, family.ErrorMemberAlreadyExists)
+			return errors.Wrap(family.ErrorMemberAlreadyExists, err)
 		case "55006":
-			return errors.Wrap(err, family.ErrorMemberLocked)
+			return errors.Wrap(family.ErrorMemberLocked, err)
 		}
-		return errors.Wrap(err, family.ErrorMemberUnknown)
+		return errors.Wrap(family.ErrorMemberUnknown, err)
 	default:
 		switch err {
 		case family.ErrorMemberNotFound:
 			return err
 		case gorm.ErrRecordNotFound:
-			return errors.Wrap(err, family.ErrorMemberNotFound)
+			return errors.Wrap(family.ErrorMemberNotFound, err)
 		default:
-			return errors.Wrap(err, family.ErrorMemberUnknown)
+			return errors.Wrap(family.ErrorMemberUnknown, err)
 		}
 	}
 }
