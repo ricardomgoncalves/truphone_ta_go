@@ -722,3 +722,46 @@ func TestFamilyService_CreateMember(t *testing.T) {
 		require.Equal(t, "request_id", resp.Id)
 	})
 }
+
+func TestFamilyService_GetMember(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return error member id should be provided", func(t *testing.T) {
+		resp, err := service.GetMember(ctx, &GetMemberRequest{Id: ""})
+		require.Equal(t, errors.Annotate(family.ErrorMemberBadRequest, "member id should be provided"), err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return error on repository error", func(t *testing.T) {
+		errToReturn := errors.New("some random error")
+		memRepo.EXPECT().
+			GetMemberById(gomock.Eq(ctx), gomock.Eq("id")).
+			Times(1).
+			Return(nil, errToReturn)
+
+		resp, err := service.GetMember(ctx, &GetMemberRequest{Id: "id"})
+		require.Equal(t, errToReturn, err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return member", func(t *testing.T) {
+		member := family.Member{
+			Id: "id",
+		}
+		memRepo.EXPECT().
+			GetMemberById(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(&member, nil)
+
+		resp, err := service.GetMember(ctx, &GetMemberRequest{Id: "id"})
+
+		require.Nil(t, err)
+		require.Equal(t, member, resp.Result)
+		require.Equal(t, "request_id", resp.Id)
+	})
+}

@@ -152,3 +152,106 @@ func TestCreateMemberHandler(t *testing.T) {
 		assert.Equal(t, 400, recorder.Code)
 	})
 }
+
+func TestGetMemberHandler(t *testing.T) {
+	ctl := gomock.NewController(t)
+	svc := service.NewMockService(ctl)
+
+	t.Run("should get response code 200", func(t *testing.T) {
+		reqBody := service.GetMemberRequest{Id: "id"}
+
+		svcResp := service.GetMemberResponse{
+			Id:      "request_id",
+			Code:    200,
+			Message: http.StatusText(200),
+			Result: family.Member{
+				Id: "id",
+			},
+		}
+
+		svc.EXPECT().
+			GetMember(gomock.Any(), gomock.Eq(&reqBody)).
+			Times(1).
+			Return(&svcResp, nil)
+
+		req, err := http.NewRequest("GET", "/truphone/members/id", nil)
+		require.Nil(t, err)
+
+		recorder := httptest.NewRecorder()
+		router := Router(svc)
+		router.ServeHTTP(recorder, req)
+
+		assert.Equal(t, 200, recorder.Code)
+		outResp := service.GetMemberResponse{}
+		err = json.NewDecoder(recorder.Body).Decode(&outResp)
+		require.Nil(t, err)
+		assert.Equal(t, svcResp, outResp)
+	})
+
+	t.Run("should get response code of service", func(t *testing.T) {
+		reqBody := service.GetMemberRequest{Id: "id"}
+
+		svcResp := service.GetMemberResponse{
+			Id:      "request_id",
+			Code:    301,
+			Message: http.StatusText(301),
+			Result: family.Member{
+				Id: "id",
+			},
+		}
+
+		svc.EXPECT().
+			GetMember(gomock.Any(), gomock.Eq(&reqBody)).
+			Times(1).
+			Return(&svcResp, nil)
+
+		req, err := http.NewRequest("GET", "/truphone/members/id", nil)
+		require.Nil(t, err)
+
+		recorder := httptest.NewRecorder()
+		router := Router(svc)
+		router.ServeHTTP(recorder, req)
+
+		assert.Equal(t, 301, recorder.Code)
+		outResp := service.GetMemberResponse{}
+		err = json.NewDecoder(recorder.Body).Decode(&outResp)
+		require.Nil(t, err)
+		assert.Equal(t, svcResp, outResp)
+	})
+
+	t.Run("should get service error code", func(t *testing.T) {
+		reqBody := service.GetMemberRequest{Id: "id"}
+
+		svc.EXPECT().
+			GetMember(gomock.Any(), gomock.Eq(&reqBody)).
+			Times(1).
+			Return(nil, family.ErrorFamilyNotFound)
+
+		req, err := http.NewRequest("GET", "/truphone/members/id", nil)
+		require.Nil(t, err)
+
+		recorder := httptest.NewRecorder()
+		router := Router(svc)
+		router.ServeHTTP(recorder, req)
+
+		assert.Equal(t, 404, recorder.Code)
+	})
+
+	t.Run("should get 500 error code", func(t *testing.T) {
+		reqBody := service.GetMemberRequest{Id: "id"}
+
+		svc.EXPECT().
+			GetMember(gomock.Any(), gomock.Eq(&reqBody)).
+			Times(1).
+			Return(nil, errors.New("random"))
+
+		req, err := http.NewRequest("GET", "/truphone/members/id", nil)
+		require.Nil(t, err)
+
+		recorder := httptest.NewRecorder()
+		router := Router(svc)
+		router.ServeHTTP(recorder, req)
+
+		assert.Equal(t, 500, recorder.Code)
+	})
+}

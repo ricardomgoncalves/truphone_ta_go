@@ -21,8 +21,8 @@ type Service interface {
 	DeleteFamily(ctx context.Context, req *DeleteFamilyRequest) (*DeleteFamilyResponse, error)
 
 	CreateMember(ctx context.Context, req *CreateMemberRequest) (*CreateMemberResponse, error)
-	/*GetMemberById (ctx context.Context, req *GetMemberByIdRequest) (*GetMemberByIdResponse, error)
-	ListMembers (ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
+	GetMember(ctx context.Context, req *GetMemberRequest) (*GetMemberResponse, error)
+	/*ListMembers (ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
 	UpdateMember (ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)
 	DeleteMember (ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error)*/
 }
@@ -228,5 +228,26 @@ func (service FamilyService) CreateMember(ctx context.Context, req *CreateMember
 		Code:    http.StatusOK,
 		Message: http.StatusText(http.StatusOK),
 		Result:  member.Id,
+	}, nil
+}
+
+func (service FamilyService) GetMember(ctx context.Context, req *GetMemberRequest) (*GetMemberResponse, error) {
+	requestId, _ := requestid.GetRequestId(ctx)
+
+	id := req.GetId()
+	if id == "" {
+		return nil, errors.Annotate(family.ErrorMemberBadRequest, "member id should be provided")
+	}
+
+	member, err := service.memberRepo.GetMemberById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetMemberResponse{
+		Id:      requestId,
+		Code:    http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
+		Result:  *member,
 	}, nil
 }

@@ -166,3 +166,24 @@ func (req *CreateMemberRequest) GetMember() family.Member {
 
 	return req.Member
 }
+
+// GetMemberRequest
+//
+// Request by GetMember Service.
+//
+// swagger:model
+type GetMemberRequest struct {
+	// the family for the request
+	//
+	// required: true
+	// example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+	Id string `json:"id"`
+}
+
+func (req *GetMemberRequest) GetId() string {
+	if req == nil {
+		return ""
+	}
+
+	return req.Id
+}

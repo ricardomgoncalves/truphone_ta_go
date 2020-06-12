@@ -122,3 +122,18 @@ func (mr *MockServiceMockRecorder) CreateMember(ctx, req interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMember", reflect.TypeOf((*MockService)(nil).CreateMember), ctx, req)
 }
+
+// GetMember mocks base method
+func (m *MockService) GetMember(ctx context.Context, req *GetMemberRequest) (*GetMemberResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetMember", ctx, req)
+	ret0, _ := ret[0].(*GetMemberResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMember indicates an expected call of GetMember
+func (mr *MockServiceMockRecorder) GetMember(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMember", reflect.TypeOf((*MockService)(nil).GetMember), ctx, req)
+}
