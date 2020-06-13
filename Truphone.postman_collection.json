@@ -1,0 +1,599 @@
+{
+	"info": {
+		"_postman_id": "c7ae1f65-03e1-49a7-b416-0aa1cab155c6",
+		"name": "Truphone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Family",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4ea7e5d5-2694-4a8c-a907-3c4ee34fca5d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"family\": {\n        \"name\": \"  a \",\n        \"country_code\": \"ES\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/families",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"families"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Family",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/families/86f2f006-dca8-4c5e-b837-2acdea33fa90",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"families",
+						"86f2f006-dca8-4c5e-b837-2acdea33fa90"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Family",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "efeba74e-f86d-41f1-834e-b84d98adbf6c",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/families/6fc9ff55-1026-4554-8a85-80e8e09f7200",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"families",
+						"6fc9ff55-1026-4554-8a85-80e8e09f7200"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Families",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2c06d84f-2e59-45fb-98fb-54dd37a0382e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/families",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"families"
+					],
+					"query": [
+						{
+							"key": "country",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "offset",
+							"value": "01",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Family",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a028c1da-9a10-434e-a792-f49765925ba4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"family\": {\n        \"country_code\": \"ES\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/families/6fc9ff55-1026-4554-8a85-80e8e09f7200",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"families",
+						"6fc9ff55-1026-4554-8a85-80e8e09f7200"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Member",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "25466325-cacf-47aa-966c-577b7ec954be",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"member\": {\n        \"family_id\": \"9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038\",\n        \"first_name\": \"First\",\n        \"middle_name\": \"Middle\",\n        \"last_name\": \"Last\",\n        \"birthday\": \"2012-02-03T00:04:05Z\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/members",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Member",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9a5efff3-5966-44b1-862b-ec5788625dfa",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/members/e90467af-7dba-4840-8b27-be96bf2b9b78",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"members",
+						"e90467af-7dba-4840-8b27-be96bf2b9b78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Member",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/members/e90467af-7dba-4840-8b27-be96bf2b9b78",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"members",
+						"e90467af-7dba-4840-8b27-be96bf2b9b78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Member",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e1d1e61c-654c-474b-aaac-b627beb0524c",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"member\": {\n        \"family_id\": \"9fadb3cc-74ee-4ff7-8bd5-ffa1d34da038\",\n        \"first_name\": \"First\",\n        \"middle_name\": \"Middle\",\n        \"last_name\": \"Last\",\n        \"birthday\": \"2012-02-03T00:04:05Z\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/members/6fc9ff55-1026-4554-8a85-80e8e09f7200",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"members",
+						"6fc9ff55-1026-4554-8a85-80e8e09f7200"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Members",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bbbab27b-d88f-47dd-994e-14c9e72042ff",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/members",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fastest Growing Families",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d1ea40e1-b216-4f11-9ca2-162b22472ff9",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/growing",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"growing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Highest Accumulator Families",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0108213a-3f15-45a6-8467-0932515fca82",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/accumulate",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"accumulate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicated Members",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0e436db7-23f5-4dcd-902c-d8c31f1bd934",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/truphone/duplicates",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"truphone",
+						"duplicates"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
