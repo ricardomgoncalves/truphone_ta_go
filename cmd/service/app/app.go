@@ -51,13 +51,8 @@ func (ServiceApp) Run(opts Options) error {
 		return err
 	}
 
-	if err := postgres.CreateTables(db); err != nil {
-		return err
-	}
-
-	if err := postgres.Populate(db); err != nil {
-		return err
-	}
+	_ = postgres.CreateTables(db)
+	_ = postgres.Populate(db)
 
 	repo := postgres.NewPostgresRepo(db)
 	svc, err := service.NewFamilyService(repo, repo)
