@@ -20,10 +20,10 @@
 package app
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/postgres"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/routes"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/service"
+	"log"
 	"net/http"
 	"time"
 )
@@ -46,13 +46,20 @@ func (ServiceApp) Run(opts Options) error {
 		return err
 	}
 
-	db, err := gorm.Open("postgres", postgresConnectionUrl)
+	db, err := postgres.TryConnectToDB(postgresConnectionUrl)
 	if err != nil {
 		return err
 	}
 
-	repo := postgres.NewPostgresRepo(db)
+	if err := postgres.CreateTables(db); err != nil {
+		return err
+	}
 
+	if err := postgres.Populate(db); err != nil {
+		return err
+	}
+
+	repo := postgres.NewPostgresRepo(db)
 	svc, err := service.NewFamilyService(repo, repo)
 	if err != nil {
 		return err
@@ -66,5 +73,6 @@ func (ServiceApp) Run(opts Options) error {
 		ReadTimeout:  30 * time.Second,
 	}
 
+	log.Println("***   starting server   ***")
 	return srv.ListenAndServe()
 }

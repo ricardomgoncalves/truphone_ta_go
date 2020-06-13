@@ -9,3 +9,15 @@ services:
       - "5432:5432"
     volumes:
       - ./docker/postgres:/var/lib/postgresql/data
+  truphone:
+    image: truphone_go:latest
+    environment:
+      POSTGRES_URL: "//postgres:5432"
+      POSTGRES_SSLMODE: "disable"
+      POSTGRES_DBNAME: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "8080:8080"
+    links:
+      - "postgres"
