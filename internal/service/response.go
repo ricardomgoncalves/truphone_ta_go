@@ -351,3 +351,33 @@ type ListFastestGrowingFamiliesResponse struct {
 	// required: true
 	Result []family.AgeFamily `json:"result,omitempty"`
 }
+
+// ListPossibleDuplicatesMembersResponse
+//
+// Response by ListPossibleDuplicatesMembers Service.
+//
+// swagger:model
+type ListPossibleDuplicatesMembersResponse struct {
+	// the id for the request
+	//
+	// required: true
+	// example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+	Id string `json:"id"`
+
+	// the response code for the request
+	//
+	// required: true
+	// example: 200
+	Code int `json:"code"`
+
+	// the message for the request
+	//
+	// required: true
+	// example: success
+	Message string `json:"message"`
+
+	// the members for the request
+	//
+	// required: true
+	Result []family.Member `json:"result,omitempty"`
+}

@@ -166,3 +166,67 @@ func (m *Member) Patch(member Member) {
 		m.Birthday = member.Birthday
 	}
 }
+
+func (m Member) HasCommonName(member Member) bool {
+	if m.FirstName == member.FirstName {
+		return true
+	}
+
+	if m.MiddleName == member.MiddleName {
+		return true
+	}
+
+	if m.LastName == member.LastName {
+		return true
+	}
+
+	return false
+}
+
+func (m Member) HasSimilarBirthday(member Member) bool {
+	if m.Birthday == member.Birthday {
+		return true
+	}
+
+	return false
+}
+
+func (m Member) IsMissingMother() bool {
+	return m.MotherId == nil
+}
+
+func (m Member) IsMissingFather() bool {
+	return m.FatherId == nil
+}
+
+func (m Member) HasSameMother(member Member) bool {
+	if m.MotherId == member.MotherId {
+		return true
+	}
+
+	if m.MotherId == nil || member.MotherId == nil {
+		return false
+	}
+
+	if *m.MotherId == *member.MotherId {
+		return true
+	}
+
+	return false
+}
+
+func (m Member) HasSameFather(member Member) bool {
+	if m.FatherId == member.FatherId {
+		return true
+	}
+
+	if m.FatherId == nil || member.FatherId == nil {
+		return false
+	}
+
+	if *m.FatherId == *member.FatherId {
+		return true
+	}
+
+	return false
+}

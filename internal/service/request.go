@@ -375,3 +375,38 @@ func (req *ListFastestGrowingFamiliesRequest) GetLimit() *uint32 {
 
 	return req.Limit
 }
+
+// ListPossibleDuplicatesMembersRequest
+//
+// Request by ListPossibleDuplicatesMembers Service.
+//
+// swagger:model
+type ListPossibleDuplicatesMembersRequest struct {
+	// the offset for the request
+	//
+	// required: false
+	// example: 1
+	Offset *uint32 `json:"offset"`
+
+	// the limit for the request
+	//
+	// required: false
+	// example: 1
+	Limit *uint32 `json:"limit"`
+}
+
+func (req *ListPossibleDuplicatesMembersRequest) GetOffset() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Offset
+}
+
+func (req *ListPossibleDuplicatesMembersRequest) GetLimit() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Limit
+}

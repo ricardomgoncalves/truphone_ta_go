@@ -212,3 +212,18 @@ func (mr *MockServiceMockRecorder) ListFastestGrowingFamilies(ctx, req interface
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFastestGrowingFamilies", reflect.TypeOf((*MockService)(nil).ListFastestGrowingFamilies), ctx, req)
 }
+
+// ListPossibleDuplicatesMembers mocks base method
+func (m *MockService) ListPossibleDuplicatesMembers(ctx context.Context, req *ListPossibleDuplicatesMembersRequest) (*ListPossibleDuplicatesMembersResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPossibleDuplicatesMembers", ctx, req)
+	ret0, _ := ret[0].(*ListPossibleDuplicatesMembersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPossibleDuplicatesMembers indicates an expected call of ListPossibleDuplicatesMembers
+func (mr *MockServiceMockRecorder) ListPossibleDuplicatesMembers(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPossibleDuplicatesMembers", reflect.TypeOf((*MockService)(nil).ListPossibleDuplicatesMembers), ctx, req)
+}

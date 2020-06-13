@@ -1447,3 +1447,99 @@ func TestFamilyService_ListFastestGrowingFamilies(t *testing.T) {
 		require.Equal(t, []family.AgeFamily{{Family: family.Family{Id: "id_1"}, Age: 0}}, resp.Result)
 	})
 }
+
+func TestFamilyService_ListPossibleDuplicatesMembers(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return families", func(t *testing.T) {
+		req := ListPossibleDuplicatesMembersRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return([]family.Member{{Id: "1"}, {Id: "2"}}, nil)
+
+		resp, err := service.ListPossibleDuplicatesMembers(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.Member{{Id: "1"}, {Id: "2"}}, resp.Result)
+	})
+	t.Run("should return random error on list families", func(t *testing.T) {
+		req := ListPossibleDuplicatesMembersRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListPossibleDuplicatesMembers(ctx, &req)
+		require.Equal(t, errors.New("test"), err)
+		require.Nil(t, resp)
+	})
+	t.Run("should return nil error on error in list members", func(t *testing.T) {
+		req := ListPossibleDuplicatesMembersRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListPossibleDuplicatesMembers(ctx, &req)
+		require.Equal(t, nil, err)
+		require.NotNil(t, resp)
+		require.Equal(t, []family.Member{}, resp.Result)
+	})
+	t.Run("should return families with offset and limit", func(t *testing.T) {
+		val := uint32(1)
+		req := ListPossibleDuplicatesMembersRequest{
+			Offset: &val,
+			Limit:  &val,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return([]family.Member{{Id: "1"}, {Id: "2"}, {Id: "3"}}, nil)
+
+		resp, err := service.ListPossibleDuplicatesMembers(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.Member{{Id: "2"}}, resp.Result)
+	})
+}

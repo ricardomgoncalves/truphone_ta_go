@@ -230,3 +230,137 @@ func TestMember_Patch(t *testing.T) {
 		assert.Equal(t, tm, fam.Birthday)
 	})
 }
+
+func TestMember_HasCommonName(t *testing.T) {
+	t.Run("should return true on first_name", func(t *testing.T) {
+		member := Member{
+			FirstName: "First",
+		}
+		assert.True(t, member.HasCommonName(Member{FirstName: "First"}))
+	})
+	t.Run("should return true on middle_name", func(t *testing.T) {
+		member := Member{
+			FirstName:  "First",
+			MiddleName: "Middle",
+		}
+		assert.True(t, member.HasCommonName(Member{MiddleName: "Middle"}))
+	})
+	t.Run("should return true on first_name", func(t *testing.T) {
+		member := Member{
+			FirstName:  "First",
+			MiddleName: "Middle",
+			LastName:   "Last",
+		}
+		assert.True(t, member.HasCommonName(Member{LastName: "Last"}))
+	})
+	t.Run("should return false", func(t *testing.T) {
+		member := Member{
+			FirstName:  "First",
+			MiddleName: "Middle",
+			LastName:   "Last",
+		}
+		assert.False(t, member.HasCommonName(Member{}))
+	})
+}
+
+func TestMember_HasSimilarBirthday(t *testing.T) {
+	t.Run("should return true on equal birthdays", func(t *testing.T) {
+		birthday := time.Now()
+		member := Member{
+			Birthday: birthday,
+		}
+		assert.True(t, member.HasSimilarBirthday(Member{Birthday: birthday}))
+	})
+	t.Run("should return false", func(t *testing.T) {
+		member := Member{
+			Birthday: time.Now(),
+		}
+		assert.False(t, member.HasSimilarBirthday(Member{
+			Birthday: time.Now().Add(time.Second * 1),
+		}))
+	})
+}
+
+func TestMember_IsMissingMother(t *testing.T) {
+	t.Run("should return true on nil mother_id", func(t *testing.T) {
+		assert.True(t, Member{}.IsMissingMother())
+	})
+	t.Run("should return false", func(t *testing.T) {
+		motherId := "id"
+		assert.False(t, Member{
+			MotherId: &motherId,
+		}.IsMissingMother())
+	})
+}
+
+func TestMember_IsMissingFather(t *testing.T) {
+	t.Run("should return true on nil father_id", func(t *testing.T) {
+		assert.True(t, Member{}.IsMissingFather())
+	})
+	t.Run("should return false", func(t *testing.T) {
+		fatherId := "id"
+		assert.False(t, Member{
+			FatherId: &fatherId,
+		}.IsMissingFather())
+	})
+}
+
+func TestMember_HasSameMother(t *testing.T) {
+	t.Run("should return true on both nil", func(t *testing.T) {
+		member := Member{}
+		assert.True(t, member.HasSameMother(Member{}))
+	})
+	t.Run("should return false on one nil", func(t *testing.T) {
+		motherId := "id"
+		member := Member{
+			MotherId: &motherId,
+		}
+		assert.False(t, member.HasSameMother(Member{}))
+	})
+	t.Run("should return true", func(t *testing.T) {
+		motherId1 := "id"
+		motherId2 := "id"
+		member := Member{
+			MotherId: &motherId1,
+		}
+		assert.True(t, member.HasSameMother(Member{MotherId: &motherId2}))
+	})
+	t.Run("should return false", func(t *testing.T) {
+		motherId1 := "id"
+		motherId2 := "id2"
+		member := Member{
+			MotherId: &motherId1,
+		}
+		assert.False(t, member.HasSameMother(Member{MotherId: &motherId2}))
+	})
+}
+
+func TestMember_HasSameFather(t *testing.T) {
+	t.Run("should return true on both nil", func(t *testing.T) {
+		member := Member{}
+		assert.True(t, member.HasSameFather(Member{}))
+	})
+	t.Run("should return false on one nil", func(t *testing.T) {
+		fatherId := "id"
+		member := Member{
+			FatherId: &fatherId,
+		}
+		assert.False(t, member.HasSameFather(Member{}))
+	})
+	t.Run("should return true", func(t *testing.T) {
+		fatherId1 := "id"
+		fatherId2 := "id"
+		member := Member{
+			FatherId: &fatherId1,
+		}
+		assert.True(t, member.HasSameFather(Member{FatherId: &fatherId2}))
+	})
+	t.Run("should return false", func(t *testing.T) {
+		fatherId1 := "id"
+		fatherId2 := "id2"
+		member := Member{
+			FatherId: &fatherId1,
+		}
+		assert.False(t, member.HasSameFather(Member{FatherId: &fatherId2}))
+	})
+}

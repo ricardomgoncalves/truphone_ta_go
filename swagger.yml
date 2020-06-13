@@ -525,6 +525,57 @@ definitions:
     title: ListMembersResponse
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListPossibleDuplicatesMembersRequest:
+    description: Request by ListPossibleDuplicatesMembers Service.
+    properties:
+      limit:
+        description: the limit for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Limit
+      offset:
+        description: the offset for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Offset
+    title: ListPossibleDuplicatesMembersRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListPossibleDuplicatesMembersResponse:
+    description: Response by ListPossibleDuplicatesMembers Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the members for the request
+        items:
+          $ref: '#/definitions/Member'
+        type: array
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: ListPossibleDuplicatesMembersResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   Member:
     description: A member can have a father, mother and spouse.
     properties:
@@ -692,7 +743,7 @@ info:
   title: Family API.
   version: 0.0.1
 paths:
-  /accumulate:
+  /accumulators:
     get:
       operationId: listAccumulatedFamilies
       parameters:
@@ -713,6 +764,27 @@ paths:
           schema:
             $ref: '#/definitions/ListAccumulatedFamiliesResponse'
       summary: Lists the most accumulated aged Families.
+  /duplicates:
+    get:
+      operationId: listDuplicates
+      parameters:
+      - description: offset number of results to return
+        format: int32
+        in: query
+        name: offset
+        type: integer
+      - description: maximum number of results to return
+        format: int32
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/ListPossibleDuplicatesMembersResponse'
+      summary: Lists the possible duplicated members.
   /families:
     get:
       operationId: listFamilies
@@ -801,7 +873,7 @@ paths:
           schema:
             $ref: '#/definitions/UpdateFamilyResponse'
       summary: Updates a Family.
-  /growing:
+  /growths:
     get:
       operationId: listGrowingFamilies
       parameters:
