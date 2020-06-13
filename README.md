@@ -2,13 +2,17 @@
 
 ## Introduction
 
+This assessment was developed using Golang. I think that with go the assessment could be done faster, because during this week I had my driver's license test, had school work, and my day to day normal job. I would be able to do this
+with Java, this decision was only because of the time.
 
+I hope you enjoy reviewing this work. 
 
 ### Contents
 * Building
 * Running
 * Testing
 * Postman
+* Swagger
 
 ## Building
 
@@ -46,4 +50,8 @@ This will run the unit tests and will open in the browser the coverage report.
 ## Postman
 
 A postman collection included in the file: `Truphone.postman_collection.json`
+
+## Swagger
+
+A swagger documentation of the API included in the file: `swagger.yml`
 
