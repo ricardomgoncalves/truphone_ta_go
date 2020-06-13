@@ -231,3 +231,67 @@ func TestDeleteMemberRequest_GetId(t *testing.T) {
 		assert.Equal(t, "id", req.GetId())
 	})
 }
+
+func TestListAccumulatedFamiliesRequest_GetLimit(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListAccumulatedFamiliesRequest
+		assert.Equal(t, (*uint32)(nil), req.GetLimit())
+	})
+	t.Run("should return nil limit", func(t *testing.T) {
+		req := &ListAccumulatedFamiliesRequest{Limit: nil}
+		assert.Equal(t, (*uint32)(nil), req.GetLimit())
+	})
+	t.Run("should return limit", func(t *testing.T) {
+		limit := uint32(2)
+		req := &ListAccumulatedFamiliesRequest{Limit: &limit}
+		assert.Equal(t, &limit, req.GetLimit())
+	})
+}
+
+func TestListAccumulatedFamiliesRequest_GetOffset(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListAccumulatedFamiliesRequest
+		assert.Equal(t, (*uint32)(nil), req.GetOffset())
+	})
+	t.Run("should return nil offset", func(t *testing.T) {
+		req := &ListAccumulatedFamiliesRequest{Offset: nil}
+		assert.Equal(t, (*uint32)(nil), req.GetOffset())
+	})
+	t.Run("should return offset", func(t *testing.T) {
+		offset := uint32(2)
+		req := &ListAccumulatedFamiliesRequest{Offset: &offset}
+		assert.Equal(t, &offset, req.GetOffset())
+	})
+}
+
+func TestListFastestGrowingFamiliesRequest_GetLimit(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListFastestGrowingFamiliesRequest
+		assert.Equal(t, (*uint32)(nil), req.GetLimit())
+	})
+	t.Run("should return nil limit", func(t *testing.T) {
+		req := &ListFastestGrowingFamiliesRequest{Limit: nil}
+		assert.Equal(t, (*uint32)(nil), req.GetLimit())
+	})
+	t.Run("should return limit", func(t *testing.T) {
+		limit := uint32(2)
+		req := &ListFastestGrowingFamiliesRequest{Limit: &limit}
+		assert.Equal(t, &limit, req.GetLimit())
+	})
+}
+
+func TestListFastestGrowingFamiliesRequest_GetOffset(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListFastestGrowingFamiliesRequest
+		assert.Equal(t, (*uint32)(nil), req.GetOffset())
+	})
+	t.Run("should return nil offset", func(t *testing.T) {
+		req := &ListFastestGrowingFamiliesRequest{Offset: nil}
+		assert.Equal(t, (*uint32)(nil), req.GetOffset())
+	})
+	t.Run("should return offset", func(t *testing.T) {
+		offset := uint32(2)
+		req := &ListFastestGrowingFamiliesRequest{Offset: &offset}
+		assert.Equal(t, &offset, req.GetOffset())
+	})
+}

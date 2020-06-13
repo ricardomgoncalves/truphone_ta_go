@@ -44,3 +44,17 @@ func (f *Family) Patch(fam Family) {
 		f.CountryCode = fam.CountryCode
 	}
 }
+
+// AgeFamily
+//
+// A family with its age.
+//
+// swagger:model
+type AgeFamily struct {
+	Family
+
+	// Age for the age family.
+	//
+	// required: true
+	Age int64 `json:"age"`
+}

@@ -182,3 +182,33 @@ func (mr *MockServiceMockRecorder) DeleteMember(ctx, req interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMember", reflect.TypeOf((*MockService)(nil).DeleteMember), ctx, req)
 }
+
+// ListAccumulatedFamilies mocks base method
+func (m *MockService) ListAccumulatedFamilies(ctx context.Context, req *ListAccumulatedFamiliesRequest) (*ListAccumulatedFamiliesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAccumulatedFamilies", ctx, req)
+	ret0, _ := ret[0].(*ListAccumulatedFamiliesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAccumulatedFamilies indicates an expected call of ListAccumulatedFamilies
+func (mr *MockServiceMockRecorder) ListAccumulatedFamilies(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccumulatedFamilies", reflect.TypeOf((*MockService)(nil).ListAccumulatedFamilies), ctx, req)
+}
+
+// ListFastestGrowingFamilies mocks base method
+func (m *MockService) ListFastestGrowingFamilies(ctx context.Context, req *ListFastestGrowingFamiliesRequest) (*ListFastestGrowingFamiliesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFastestGrowingFamilies", ctx, req)
+	ret0, _ := ret[0].(*ListFastestGrowingFamiliesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFastestGrowingFamilies indicates an expected call of ListFastestGrowingFamilies
+func (mr *MockServiceMockRecorder) ListFastestGrowingFamilies(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFastestGrowingFamilies", reflect.TypeOf((*MockService)(nil).ListFastestGrowingFamilies), ctx, req)
+}

@@ -795,8 +795,8 @@ func TestFamilyService_ListMembers(t *testing.T) {
 
 	t.Run("should return members correctly ", func(t *testing.T) {
 		req := ListMembersRequest{
-			Offset:      nil,
-			Limit:       nil,
+			Offset: nil,
+			Limit:  nil,
 		}
 
 		opts := []repo.FilterOption{}
@@ -812,8 +812,8 @@ func TestFamilyService_ListMembers(t *testing.T) {
 
 	t.Run("should return random error", func(t *testing.T) {
 		req := ListMembersRequest{
-			Offset:      nil,
-			Limit:       nil,
+			Offset: nil,
+			Limit:  nil,
 		}
 
 		opts := []repo.FilterOption{}
@@ -1238,5 +1238,212 @@ func TestFamilyService_DeleteMember(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		require.Equal(t, "request_id", resp.Id)
+	})
+}
+
+func TestFamilyService_ListAccumulatedFamilies(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return families", func(t *testing.T) {
+		req := ListAccumulatedFamiliesRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return([]family.Member{}, nil)
+
+		resp, err := service.ListAccumulatedFamilies(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.AgeFamily{{Family: family.Family{Id: "id"}, Age: 0}}, resp.Result)
+	})
+
+	t.Run("should return random error on list families", func(t *testing.T) {
+		req := ListAccumulatedFamiliesRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListAccumulatedFamilies(ctx, &req)
+		require.Equal(t, errors.New("test"), err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return nil error on error in list members", func(t *testing.T) {
+		req := ListAccumulatedFamiliesRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListAccumulatedFamilies(ctx, &req)
+		require.Equal(t, nil, err)
+		require.NotNil(t, resp)
+		require.Equal(t, []family.AgeFamily{}, resp.Result)
+	})
+
+	t.Run("should return families with offset and limit", func(t *testing.T) {
+		val := uint32(1)
+		req := ListAccumulatedFamiliesRequest{
+			Offset: &val,
+			Limit:  &val,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+				{
+					Id: "id_1",
+				},
+				{
+					Id: "id_2",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(3).
+			Return([]family.Member{}, nil)
+
+		resp, err := service.ListAccumulatedFamilies(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.AgeFamily{{Family: family.Family{Id: "id_1"}, Age: 0}}, resp.Result)
+	})
+}
+
+func TestFamilyService_ListFastestGrowingFamilies(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return families", func(t *testing.T) {
+		req := ListFastestGrowingFamiliesRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return([]family.Member{}, nil)
+
+		resp, err := service.ListFastestGrowingFamilies(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.AgeFamily{{Family: family.Family{Id: "id"}, Age: 0}}, resp.Result)
+	})
+	t.Run("should return random error on list families", func(t *testing.T) {
+		req := ListFastestGrowingFamiliesRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListFastestGrowingFamilies(ctx, &req)
+		require.Equal(t, errors.New("test"), err)
+		require.Nil(t, resp)
+	})
+	t.Run("should return nil error on error in list members", func(t *testing.T) {
+		req := ListFastestGrowingFamiliesRequest{
+			Offset: nil,
+			Limit:  nil,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListFastestGrowingFamilies(ctx, &req)
+		require.Equal(t, nil, err)
+		require.NotNil(t, resp)
+		require.Equal(t, []family.AgeFamily{}, resp.Result)
+	})
+	t.Run("should return families with offset and limit", func(t *testing.T) {
+		val := uint32(1)
+		req := ListFastestGrowingFamiliesRequest{
+			Offset: &val,
+			Limit:  &val,
+		}
+
+		famRepo.EXPECT().
+			ListFamilies(gomock.Eq(ctx)).
+			Times(1).
+			Return([]family.Family{
+				{
+					Id: "id",
+				},
+				{
+					Id: "id_1",
+				},
+				{
+					Id: "id_2",
+				},
+			}, nil)
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(3).
+			Return([]family.Member{}, nil)
+
+		resp, err := service.ListFastestGrowingFamilies(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.AgeFamily{{Family: family.Family{Id: "id_1"}, Age: 0}}, resp.Result)
 	})
 }

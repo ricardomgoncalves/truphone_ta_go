@@ -2,12 +2,13 @@ package routes
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+
 	"github.com/gorilla/mux"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/service"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/errors"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
-	"net/http"
-	"strconv"
 )
 
 func MemberRouter(router *mux.Router, service service.Service) {

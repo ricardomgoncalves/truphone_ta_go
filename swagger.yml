@@ -2,6 +2,39 @@ basePath: /truphone
 consumes:
 - application/json
 definitions:
+  AgeFamily:
+    description: A family with its age.
+    properties:
+      age:
+        description: Age for the age family.
+        format: int64
+        type: integer
+        x-go-name: Age
+      country_code:
+        description: the country code for this family
+        maxLength: 2
+        minLength: 2
+        type: string
+        x-go-name: CountryCode
+      id:
+        description: the id for this family
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      name:
+        description: the name for this family
+        maxLength: 30
+        minLength: 3
+        type: string
+        x-go-name: Name
+    required:
+    - id
+    - name
+    - country_code
+    - age
+    title: AgeFamily
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/pkg/family
   CreateFamilyRequest:
     description: Request by CreateFamily Service.
     properties:
@@ -273,6 +306,57 @@ definitions:
     title: GetMemberResponse
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListAccumulatedFamiliesRequest:
+    description: Request by ListAccumulatedFamilies Service.
+    properties:
+      limit:
+        description: the limit for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Limit
+      offset:
+        description: the offset for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Offset
+    title: ListAccumulatedFamiliesRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListAccumulatedFamiliesResponse:
+    description: Response by ListAccumulatedFamilies Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the members for the request
+        items:
+          $ref: '#/definitions/AgeFamily'
+        type: array
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: ListAccumulatedFamiliesResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   ListFamiliesRequest:
     description: Request by ListFamilies Service.
     properties:
@@ -327,6 +411,118 @@ definitions:
     - message
     - result
     title: ListFamiliesResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListFastestGrowingFamiliesRequest:
+    description: Request by ListFastestGrowingFamilies Service.
+    properties:
+      limit:
+        description: the limit for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Limit
+      offset:
+        description: the offset for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Offset
+    title: ListFastestGrowingFamiliesRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListFastestGrowingFamiliesResponse:
+    description: Response by ListFastestGrowingFamilies Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the members for the request
+        items:
+          $ref: '#/definitions/AgeFamily'
+        type: array
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: ListFastestGrowingFamiliesResponse
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListMembersRequest:
+    description: Request by ListMembers Service.
+    properties:
+      family_id:
+        description: the family id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: FamilyId
+      limit:
+        description: the limit for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Limit
+      offset:
+        description: the offset for the request
+        example: 1
+        format: uint32
+        type: integer
+        x-go-name: Offset
+      parent_id:
+        description: the parent id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: ParentId
+    title: ListMembersRequest
+    type: object
+    x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
+  ListMembersResponse:
+    description: Response by ListMembers Service.
+    properties:
+      code:
+        description: the response code for the request
+        example: 200
+        format: int64
+        type: integer
+        x-go-name: Code
+      id:
+        description: the id for the request
+        example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+        type: string
+        x-go-name: Id
+      message:
+        description: the message for the request
+        example: success
+        type: string
+        x-go-name: Message
+      result:
+        description: the members for the request
+        items:
+          $ref: '#/definitions/Member'
+        type: array
+        x-go-name: Result
+    required:
+    - id
+    - code
+    - message
+    - result
+    title: ListMembersResponse
     type: object
     x-go-package: github.com/ricardomgoncalves/truphone_ta_go/internal/service
   Member:
@@ -496,6 +692,27 @@ info:
   title: Family API.
   version: 0.0.1
 paths:
+  /accumulate:
+    get:
+      operationId: listAccumulatedFamilies
+      parameters:
+      - description: offset number of results to return
+        format: int32
+        in: query
+        name: offset
+        type: integer
+      - description: maximum number of results to return
+        format: int32
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/ListAccumulatedFamiliesResponse'
+      summary: Lists the most accumulated aged Families.
   /families:
     get:
       operationId: listFamilies
@@ -584,7 +801,58 @@ paths:
           schema:
             $ref: '#/definitions/UpdateFamilyResponse'
       summary: Updates a Family.
+  /growing:
+    get:
+      operationId: listGrowingFamilies
+      parameters:
+      - description: offset number of results to return
+        format: int32
+        in: query
+        name: offset
+        type: integer
+      - description: maximum number of results to return
+        format: int32
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/ListFastestGrowingFamiliesResponse'
+      summary: Lists the fastest growing Families.
   /members:
+    get:
+      operationId: listMembers
+      parameters:
+      - description: offset number of results to return
+        format: int32
+        in: query
+        name: offset
+        type: integer
+      - description: maximum number of results to return
+        format: int32
+        in: query
+        name: limit
+        type: integer
+      - description: family id to filter
+        format: string
+        in: query
+        name: family
+        type: string
+      - description: parent id to filter
+        format: string
+        in: query
+        name: parent
+        type: string
+      produces:
+      - application/json
+      responses:
+        default:
+          schema:
+            $ref: '#/definitions/ListMembersResponse'
+      summary: Lists members.
     post:
       operationId: createMembers
       parameters:

@@ -305,3 +305,73 @@ func (req *DeleteMemberRequest) GetId() string {
 
 	return req.Id
 }
+
+// ListAccumulatedFamiliesRequest
+//
+// Request by ListAccumulatedFamilies Service.
+//
+// swagger:model
+type ListAccumulatedFamiliesRequest struct {
+	// the offset for the request
+	//
+	// required: false
+	// example: 1
+	Offset *uint32 `json:"offset"`
+
+	// the limit for the request
+	//
+	// required: false
+	// example: 1
+	Limit *uint32 `json:"limit"`
+}
+
+func (req *ListAccumulatedFamiliesRequest) GetOffset() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Offset
+}
+
+func (req *ListAccumulatedFamiliesRequest) GetLimit() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Limit
+}
+
+// ListFastestGrowingFamiliesRequest
+//
+// Request by ListFastestGrowingFamilies Service.
+//
+// swagger:model
+type ListFastestGrowingFamiliesRequest struct {
+	// the offset for the request
+	//
+	// required: false
+	// example: 1
+	Offset *uint32 `json:"offset"`
+
+	// the limit for the request
+	//
+	// required: false
+	// example: 1
+	Limit *uint32 `json:"limit"`
+}
+
+func (req *ListFastestGrowingFamiliesRequest) GetOffset() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Offset
+}
+
+func (req *ListFastestGrowingFamiliesRequest) GetLimit() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Limit
+}

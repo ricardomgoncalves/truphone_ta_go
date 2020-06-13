@@ -4,11 +4,14 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/ricardomgoncalves/truphone_ta_go/internal/repo"
+	"github.com/ricardomgoncalves/truphone_ta_go/pkg/age"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/countrycode"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/errors"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
+	"github.com/ricardomgoncalves/truphone_ta_go/pkg/limiter"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/requestid"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/verify"
+	"log"
 	"net/http"
 )
 
@@ -24,6 +27,10 @@ type Service interface {
 	ListMembers(ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
 	UpdateMember(ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)
 	DeleteMember(ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error)
+
+	ListAccumulatedFamilies(ctx context.Context, req *ListAccumulatedFamiliesRequest) (*ListAccumulatedFamiliesResponse, error)
+	ListFastestGrowingFamilies(ctx context.Context, req *ListFastestGrowingFamiliesRequest) (*ListFastestGrowingFamiliesResponse, error)
+	//ListDuplicatesMembers(ctx context.Context, req *ListDuplicatesMembersRequest) (*ListDuplicatesMembersResponse, error)
 }
 
 type FamilyService struct {
@@ -382,5 +389,87 @@ func (service FamilyService) DeleteMember(ctx context.Context, req *DeleteMember
 		Id:      requestId,
 		Code:    http.StatusOK,
 		Message: http.StatusText(http.StatusOK),
+	}, nil
+}
+
+func (service FamilyService) ListAccumulatedFamilies(ctx context.Context, req *ListAccumulatedFamiliesRequest) (*ListAccumulatedFamiliesResponse, error) {
+	requestId, _ := requestid.GetRequestId(ctx)
+
+	offset := uint32(0)
+	limit := uint32(0)
+
+	if val := req.GetOffset(); val != nil {
+		offset = *val
+	}
+
+	if val := req.GetLimit(); val != nil {
+		limit = *val
+	}
+
+	families, err := service.familyRepo.ListFamilies(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	members := make(map[string][]family.Member, 0)
+	for _, fam := range families {
+		familyMembers, err := service.memberRepo.ListMembers(ctx, repo.WithFamilyId(fam.Id))
+		if err != nil {
+			log.Printf("Family %s got error: %v", fam.Id, err.Error())
+			continue
+		}
+
+		members[fam.Id] = familyMembers
+	}
+
+	agedFamilies := age.FindAccumulatedAge(families, members)
+	agedFamilies = limiter.LimitAgedFamilies(agedFamilies, offset, limit)
+
+	return &ListAccumulatedFamiliesResponse{
+		Id:      requestId,
+		Code:    http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
+		Result:  agedFamilies,
+	}, nil
+}
+
+func (service FamilyService) ListFastestGrowingFamilies(ctx context.Context, req *ListFastestGrowingFamiliesRequest) (*ListFastestGrowingFamiliesResponse, error) {
+	requestId, _ := requestid.GetRequestId(ctx)
+
+	offset := uint32(0)
+	limit := uint32(0)
+
+	if val := req.GetOffset(); val != nil {
+		offset = *val
+	}
+
+	if val := req.GetLimit(); val != nil {
+		limit = *val
+	}
+
+	families, err := service.familyRepo.ListFamilies(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	members := make(map[string][]family.Member, 0)
+	for _, fam := range families {
+		familyMembers, err := service.memberRepo.ListMembers(ctx, repo.WithFamilyId(fam.Id))
+		if err != nil {
+			log.Printf("Family %s got error: %v", fam.Id, err.Error())
+			continue
+		}
+
+		members[fam.Id] = familyMembers
+	}
+
+	agedFamilies := age.FindFastestGrowingAge(families, members)
+	agedFamilies = limiter.LimitAgedFamilies(agedFamilies, offset, limit)
+
+	return &ListFastestGrowingFamiliesResponse{
+		Id:      requestId,
+		Code:    http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
+		Result:  agedFamilies,
 	}, nil
 }

@@ -18,7 +18,8 @@ func Router(service service.Service) *mux.Router {
 
 	// Routes
 	FamilyRouter(router, service)
-	MemberRouter(router,service)
+	MemberRouter(router, service)
+	OperationsRouter(router, service)
 
 	return router
 }
