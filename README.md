@@ -8,11 +8,16 @@ with Java, this decision was only because of the time.
 I hope you enjoy reviewing this work. 
 
 ### Contents
+* Sorting
 * Building
 * Running
 * Testing
 * Postman
 * Swagger
+
+## Sorting
+
+The sorting criteria was the number of members of a family.
 
 ## Building
 
