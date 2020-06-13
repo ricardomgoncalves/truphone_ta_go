@@ -145,6 +145,70 @@ func TestUpdateMemberRequest_GetId(t *testing.T) {
 	})
 }
 
+func TestListMembersRequest_GetOffset(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListMembersRequest
+		assert.Equal(t, (*uint32)(nil), req.GetLimit())
+	})
+	t.Run("should return nil limit", func(t *testing.T) {
+		req := &ListMembersRequest{Limit: nil}
+		assert.Equal(t, (*uint32)(nil), req.GetLimit())
+	})
+	t.Run("should return limit", func(t *testing.T) {
+		limit := uint32(2)
+		req := &ListMembersRequest{Limit: &limit}
+		assert.Equal(t, &limit, req.GetLimit())
+	})
+}
+
+func TestListMembersRequest_GetLimit(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListMembersRequest
+		assert.Equal(t, (*uint32)(nil), req.GetOffset())
+	})
+	t.Run("should return nil offset", func(t *testing.T) {
+		req := &ListMembersRequest{Offset: nil}
+		assert.Equal(t, (*uint32)(nil), req.GetOffset())
+	})
+	t.Run("should return offset", func(t *testing.T) {
+		offset := uint32(2)
+		req := &ListMembersRequest{Offset: &offset}
+		assert.Equal(t, &offset, req.GetOffset())
+	})
+}
+
+func TestListMembersRequest_GetFamilyId(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListMembersRequest
+		assert.Equal(t, (*string)(nil), req.GetFamilyId())
+	})
+	t.Run("should return nil country", func(t *testing.T) {
+		req := &ListMembersRequest{FamilyId: nil}
+		assert.Equal(t, (*string)(nil), req.GetFamilyId())
+	})
+	t.Run("should return country", func(t *testing.T) {
+		countryCode := "PT"
+		req := &ListMembersRequest{FamilyId: &countryCode}
+		assert.Equal(t, &countryCode, req.GetFamilyId())
+	})
+}
+
+func TestListMembersRequest_GetParentId(t *testing.T) {
+	t.Run("should return nil on nil request", func(t *testing.T) {
+		var req *ListMembersRequest
+		assert.Equal(t, (*string)(nil), req.GetParentId())
+	})
+	t.Run("should return nil country", func(t *testing.T) {
+		req := &ListMembersRequest{ParentId: nil}
+		assert.Equal(t, (*string)(nil), req.GetParentId())
+	})
+	t.Run("should return country", func(t *testing.T) {
+		countryCode := "PT"
+		req := &ListMembersRequest{ParentId: &countryCode}
+		assert.Equal(t, &countryCode, req.GetParentId())
+	})
+}
+
 func TestUpdateMemberRequest_GetMember(t *testing.T) {
 	t.Run("should return nil on nil request", func(t *testing.T) {
 		var req *UpdateMemberRequest
@@ -159,11 +223,11 @@ func TestUpdateMemberRequest_GetMember(t *testing.T) {
 
 func TestDeleteMemberRequest_GetId(t *testing.T) {
 	t.Run("should return nil on nil request", func(t *testing.T) {
-		var req *DeleteFamilyRequest
+		var req *DeleteMemberRequest
 		assert.Equal(t, "", req.GetId())
 	})
 	t.Run("should return id", func(t *testing.T) {
-		req := &DeleteFamilyRequest{Id: "id"}
+		req := &DeleteMemberRequest{Id: "id"}
 		assert.Equal(t, "id", req.GetId())
 	})
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/errors"
 	"github.com/ricardomgoncalves/truphone_ta_go/pkg/family"
 	"net/http"
+	"strconv"
 )
 
 func MemberRouter(router *mux.Router, service service.Service) {
@@ -30,7 +31,43 @@ func MemberRouter(router *mux.Router, service service.Service) {
 	//     schema:
 	//       "$ref": "#/definitions/CreateMemberResponse"
 	subRouter.HandleFunc("", CreateMemberHandler(service)).Methods("POST")
-	//subRouter.HandleFunc("", ProductsHandler).Methods("GET")
+	// swagger:operation GET /members listMembers
+	//
+	// Lists members.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: offset
+	//   in: query
+	//   description: offset number of results to return
+	//   required: false
+	//   type: integer
+	//   format: int32
+	// - name: limit
+	//   in: query
+	//   description: maximum number of results to return
+	//   required: false
+	//   type: integer
+	//   format: int32
+	// - name: family
+	//   in: query
+	//   description: family id to filter
+	//   required: false
+	//   type: string
+	//   format: string
+	// - name: parent
+	//   in: query
+	//   description: parent id to filter
+	//   required: false
+	//   type: string
+	//   format: string
+	// responses:
+	//   default:
+	//     schema:
+	//       "$ref": "#/definitions/ListMembersResponse"
+	subRouter.HandleFunc("", ListMembersHandler(service)).Methods("GET")
 	// swagger:operation POST /members/{id} getMember
 	//
 	// Gets a Member.
@@ -101,6 +138,43 @@ func CreateMemberHandler(svc service.Service) http.HandlerFunc {
 		}
 
 		resp, err := svc.CreateMember(ctx, req)
+		if err != nil {
+			WriteError(ctx, w, err)
+			return
+		}
+
+		Write(ctx, w, resp.Code, resp)
+	}
+}
+
+func ListMembersHandler(svc service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
+		req := service.ListMembersRequest{}
+		if limit := r.URL.Query().Get("limit"); limit != "" {
+			if val, err := strconv.Atoi(limit); err == nil {
+				o := uint32(val)
+				req.Limit = &o
+			}
+		}
+
+		if offset := r.URL.Query().Get("offset"); offset != "" {
+			if val, err := strconv.Atoi(offset); err == nil {
+				o := uint32(val)
+				req.Offset = &o
+			}
+		}
+
+		if familyId := r.URL.Query().Get("family"); familyId != "" {
+			req.FamilyId = &familyId
+		}
+
+		if parentId := r.URL.Query().Get("family"); parentId != "" {
+			req.ParentId = &parentId
+		}
+
+		resp, err := svc.ListMembers(ctx, &req)
 		if err != nil {
 			WriteError(ctx, w, err)
 			return

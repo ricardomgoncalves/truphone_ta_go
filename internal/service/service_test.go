@@ -121,6 +121,51 @@ func TestFamilyService_CreateFamily(t *testing.T) {
 	})
 }
 
+func TestFamilyService_GetFamily(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return error family id should be provided", func(t *testing.T) {
+		resp, err := service.GetFamily(ctx, &GetFamilyRequest{Id: ""})
+		require.Equal(t, errors.Annotate(family.ErrorFamilyBadRequest, "family id should be provided"), err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return error on repository error", func(t *testing.T) {
+		errToReturn := errors.New("some random error")
+		famRepo.EXPECT().
+			GetFamilyById(gomock.Eq(ctx), gomock.Eq("id")).
+			Times(1).
+			Return(nil, errToReturn)
+
+		resp, err := service.GetFamily(ctx, &GetFamilyRequest{Id: "id"})
+		require.Equal(t, errToReturn, err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return family", func(t *testing.T) {
+		fam := family.Family{
+			Id:          "id",
+			Name:        "Family 1",
+			CountryCode: "PT",
+		}
+		famRepo.EXPECT().
+			GetFamilyById(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(&fam, nil)
+
+		resp, err := service.GetFamily(ctx, &GetFamilyRequest{Id: "id"})
+
+		require.Nil(t, err)
+		require.Equal(t, fam, resp.Result)
+		require.Equal(t, "request_id", resp.Id)
+	})
+}
+
 func TestFamilyService_ListFamilies(t *testing.T) {
 	ctl := gomock.NewController(t)
 	famRepo := repo.NewMockFamilyRepo(ctl)
@@ -182,51 +227,6 @@ func TestFamilyService_ListFamilies(t *testing.T) {
 		resp, err := service.ListFamilies(ctx, &req)
 		require.Equal(t, errors.New("test"), err)
 		require.Nil(t, resp)
-	})
-}
-
-func TestFamilyService_GetFamily(t *testing.T) {
-	ctl := gomock.NewController(t)
-	famRepo := repo.NewMockFamilyRepo(ctl)
-	memRepo := repo.NewMockMemberRepo(ctl)
-	service, err := NewFamilyService(famRepo, memRepo)
-	require.Nil(t, err)
-	ctx := requestid.WithRequestId(context.Background(), "request_id")
-
-	t.Run("should return error family id should be provided", func(t *testing.T) {
-		resp, err := service.GetFamily(ctx, &GetFamilyRequest{Id: ""})
-		require.Equal(t, errors.Annotate(family.ErrorFamilyBadRequest, "family id should be provided"), err)
-		require.Nil(t, resp)
-	})
-
-	t.Run("should return error on repository error", func(t *testing.T) {
-		errToReturn := errors.New("some random error")
-		famRepo.EXPECT().
-			GetFamilyById(gomock.Eq(ctx), gomock.Eq("id")).
-			Times(1).
-			Return(nil, errToReturn)
-
-		resp, err := service.GetFamily(ctx, &GetFamilyRequest{Id: "id"})
-		require.Equal(t, errToReturn, err)
-		require.Nil(t, resp)
-	})
-
-	t.Run("should return family", func(t *testing.T) {
-		fam := family.Family{
-			Id:          "id",
-			Name:        "Family 1",
-			CountryCode: "PT",
-		}
-		famRepo.EXPECT().
-			GetFamilyById(gomock.Eq(ctx), gomock.Any()).
-			Times(1).
-			Return(&fam, nil)
-
-		resp, err := service.GetFamily(ctx, &GetFamilyRequest{Id: "id"})
-
-		require.Nil(t, err)
-		require.Equal(t, fam, resp.Result)
-		require.Equal(t, "request_id", resp.Id)
 	})
 }
 
@@ -782,6 +782,69 @@ func TestFamilyService_GetMember(t *testing.T) {
 		require.Nil(t, err)
 		require.Equal(t, member, resp.Result)
 		require.Equal(t, "request_id", resp.Id)
+	})
+}
+
+func TestFamilyService_ListMembers(t *testing.T) {
+	ctl := gomock.NewController(t)
+	famRepo := repo.NewMockFamilyRepo(ctl)
+	memRepo := repo.NewMockMemberRepo(ctl)
+	service, err := NewFamilyService(famRepo, memRepo)
+	require.Nil(t, err)
+	ctx := requestid.WithRequestId(context.Background(), "request_id")
+
+	t.Run("should return members correctly ", func(t *testing.T) {
+		req := ListMembersRequest{
+			Offset:      nil,
+			Limit:       nil,
+		}
+
+		opts := []repo.FilterOption{}
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Eq(opts)).
+			Times(1).
+			Return([]family.Member{}, nil)
+
+		resp, err := service.ListMembers(ctx, &req)
+		require.Nil(t, err)
+		require.Equal(t, []family.Member{}, resp.Result)
+	})
+
+	t.Run("should return random error", func(t *testing.T) {
+		req := ListMembersRequest{
+			Offset:      nil,
+			Limit:       nil,
+		}
+
+		opts := []repo.FilterOption{}
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Eq(opts)).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListMembers(ctx, &req)
+		require.Equal(t, errors.New("test"), err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("should return error", func(t *testing.T) {
+		val := uint32(1)
+		id := "id"
+		req := ListMembersRequest{
+			Offset:   &val,
+			Limit:    &val,
+			FamilyId: &id,
+			ParentId: &id,
+		}
+
+		memRepo.EXPECT().
+			ListMembers(gomock.Eq(ctx), gomock.Any()).
+			Times(1).
+			Return(nil, errors.New("test"))
+
+		resp, err := service.ListMembers(ctx, &req)
+		require.Equal(t, errors.New("test"), err)
+		require.Nil(t, resp)
 	})
 }
 

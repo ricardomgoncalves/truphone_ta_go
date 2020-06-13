@@ -291,7 +291,7 @@ func TestListFamiliesHandler(t *testing.T) {
 			Times(1).
 			Return(&svcResp, nil)
 
-		req, err := http.NewRequest("GET", "/truphone/families?limit=1&offset=1?country=PT", nil)
+		req, err := http.NewRequest("GET", "/truphone/families?limit=1&offset=1&country=PT", nil)
 		require.Nil(t, err)
 
 		recorder := httptest.NewRecorder()
@@ -324,7 +324,7 @@ func TestListFamiliesHandler(t *testing.T) {
 			Times(1).
 			Return(&svcResp, nil)
 
-		req, err := http.NewRequest("GET", "/truphone/families?limit=1&offset=1?country=PT", nil)
+		req, err := http.NewRequest("GET", "/truphone/families?limit=1&offset=1&country=PT", nil)
 		require.Nil(t, err)
 
 		recorder := httptest.NewRecorder()

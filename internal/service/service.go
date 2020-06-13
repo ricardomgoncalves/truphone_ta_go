@@ -21,7 +21,7 @@ type Service interface {
 
 	CreateMember(ctx context.Context, req *CreateMemberRequest) (*CreateMemberResponse, error)
 	GetMember(ctx context.Context, req *GetMemberRequest) (*GetMemberResponse, error)
-	//ListMembers (ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
+	ListMembers(ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error)
 	UpdateMember(ctx context.Context, req *UpdateMemberRequest) (*UpdateMemberResponse, error)
 	DeleteMember(ctx context.Context, req *DeleteMemberRequest) (*DeleteMemberResponse, error)
 }
@@ -244,6 +244,39 @@ func (service FamilyService) GetMember(ctx context.Context, req *GetMemberReques
 		Code:    http.StatusOK,
 		Message: http.StatusText(http.StatusOK),
 		Result:  *member,
+	}, nil
+}
+
+func (service FamilyService) ListMembers(ctx context.Context, req *ListMembersRequest) (*ListMembersResponse, error) {
+	requestId, _ := requestid.GetRequestId(ctx)
+
+	options := make([]repo.FilterOption, 0)
+	if offset := req.GetOffset(); offset != nil {
+		options = append(options, repo.WithOffset(*offset))
+	}
+
+	if limit := req.GetLimit(); limit != nil {
+		options = append(options, repo.WithLimit(*limit))
+	}
+
+	if familyId := req.GetFamilyId(); familyId != nil {
+		options = append(options, repo.WithFamilyId(*familyId))
+	}
+
+	if parentId := req.GetParentId(); parentId != nil {
+		options = append(options, repo.WithParentId(*parentId))
+	}
+
+	members, err := service.memberRepo.ListMembers(ctx, options...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ListMembersResponse{
+		Id:      requestId,
+		Code:    http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
+		Result:  members,
 	}, nil
 }
 

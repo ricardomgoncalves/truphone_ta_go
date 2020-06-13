@@ -188,6 +188,69 @@ func (req *GetMemberRequest) GetId() string {
 	return req.Id
 }
 
+// ListMembersRequest
+//
+// Request by ListMembers Service.
+//
+// swagger:model
+type ListMembersRequest struct {
+	// the offset for the request
+	//
+	// required: false
+	// example: 1
+	Offset *uint32 `json:"offset"`
+
+	// the limit for the request
+	//
+	// required: false
+	// example: 1
+	Limit *uint32 `json:"limit"`
+
+	// the family id for the request
+	//
+	// required: false
+	// example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+	FamilyId *string `json:"family_id"`
+
+	// the parent id for the request
+	//
+	// required: false
+	// example: 8957bf28-aea0-47de-abe0-d4c5ea593ec6
+	ParentId *string `json:"parent_id"`
+}
+
+func (req *ListMembersRequest) GetOffset() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Offset
+}
+
+func (req *ListMembersRequest) GetLimit() *uint32 {
+	if req == nil {
+		return nil
+	}
+
+	return req.Limit
+}
+
+func (req *ListMembersRequest) GetFamilyId() *string {
+	if req == nil {
+		return nil
+	}
+
+	return req.FamilyId
+}
+
+func (req *ListMembersRequest) GetParentId() *string {
+	if req == nil {
+		return nil
+	}
+
+	return req.ParentId
+}
+
 // UpdateMemberRequest
 //
 // Request by UpdateMember Service.
